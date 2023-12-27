@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Мои рецепты</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader" 
+				style="display: flex; align-items: center; justify-content: end;">
+			
+			<form method="get" th:action="@{/register}">
+				<button>Создать пользователя</button>
+			</form>
+			
+			<form method="get" th:action="@{/auth}">
+				<button>Войти в приложение</button>
+			</form>
+			
+			<!--<form th:if="${isLoggedIn}" method="post" th:action="@{/logout}">
+				<button>Выйти из приложения</button>
+			</form>
+			
+			<form th:if="${not isLoggedIn}" method="get" th:action="@{/login}">
+				<button>Войти в приложение</button>
+			</form>-->
+		</div>
+		
+		<div class="blockCenter" id="dataArea">
+			<!--<img th:src="@{/images/notes.jpg}" width="950" height="520">-->
+		</div>
+		
+		<div class="block" id="serviceArea">SERVICE
+			<!--<br><br><b><a th:href="@{/notes-list}">Перейти в рецепты ...</a></b>-->
+		</div>
+		
+		<div class="block" id="pageFooter">FOOTER</div>
+		
+	</div>
+</body>
+
+</html>

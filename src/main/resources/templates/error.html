@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Error Page</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader" 
+				style="display: flex; align-items: center; justify-content: end;">
+			<!--<form th:if="${isLoggedIn}" method="post" th:action="@{/logout}">
+				<button>Выйти из приложения</button>
+			</form>
+			
+			<form th:if="${not isLoggedIn}" method="get" th:action="@{/login}">
+				<button>Войти в приложение</button>
+			</form>-->
+		</div>
+		
+		<div class="areaForMessages" id="dataArea">
+			<h2>Упс, что-то пошло не так!</h2>
+			<p th:text="'Status code:' + ${statusCode}"></p>
+			<p th:text="${body}"></p>
+			<p><a style="color: red;" th:href="@{/register}">Вернитесь</a> 
+				и попробуйте еще раз!</p>
+		</div>
+		
+		<div class="block" id="serviceArea">SERVICE
+			<br><br><b><a th:href="@{/}">На главную страницу ...</a></b>
+		</div>
+		
+		<div class="block" id="pageFooter">FOOTER</div>
+		
+	</div>
+</body>
+
+</html>

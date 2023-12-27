@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Register New User</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader" 
+				style="display: flex; align-items: center; justify-content: end;">
+			<!--<form th:if="${isLoggedIn}" method="post" th:action="@{/logout}">
+				<button>Выйти из приложения</button>
+			</form>
+			
+			<form th:if="${not isLoggedIn}" method="get" th:action="@{/login}">
+				<button>Войти в приложение</button>
+			</form>-->
+		</div>
+		
+		<div class="areaForData" id="dataArea">
+			<h2>Регистрация пользователя</h2>
+			
+			<form th:method="post" th:action="@{/register}">
+				
+				<label for="username">Аккаунт.....................................................:</label>
+				<input type="text" name="username">
+				<div th:if="${errorName}" style="color:red">
+					Аккаунт не может быть пустым!</div>
+				<!--<div style="color:red" 
+					th:if="${#fields.hasErrors('username')}"
+					th:errors="username">Error text</div>-->
+				<br><br>
+				
+				<label for="firstname">Имя пользователя....................................:</label>
+				<input type="text" name="firstname">
+				<br><br>
+				
+				<label for="lastname">Фамилия пользователя............................:</label>
+				<input type="text" name="lastname">
+				<br><br>
+				
+				<label for="email">Почта.........................................................:</label>
+				<input type="email" name="email">
+				<div th:if="${errorEmail}" style="color:red">
+					Почта не может быть пустой!</div>
+				<br><br>
+				
+				<label for="password">Пароль.......................................................:</label>
+				<input type="password" name="password">
+				<br><br>
+				
+				<label for="confirm">Подтверждение пароля............................:</label>
+				<input type="password" name="confirm">
+				<div th:if="${errorPass}" style="color:red">
+					Пароль и подтверждение пароля не совпадают!</div> 
+				<br><br>
+				
+				<label for="roleType">Тип роли ('user', 'admin' или что угодно):</label>
+				<input type="text" name="roleType">
+				<br><br>
+				
+				<button>Создать пользователя</button>
+			</form>
+		</div>
+		
+		<div class="block" id="serviceArea">SERVICE
+			<br><br><b><a th:href="@{/}">На главную страницу ...</a></b>
+		</div>
+		
+		<div class="block" id="pageFooter">FOOTER</div>
+		
+	</div>
+</body>
+</html>

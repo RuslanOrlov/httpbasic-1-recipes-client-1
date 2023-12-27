@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Authentication</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body class="center">
+	<div id="loginArea">
+		<h1>Вход в систему</h1>
+		
+		<div th:if="${error}">
+			Вход не возможен. Проверьте свое имя пользователя и пароль.
+		</div>
+		
+		<p>Вы новый пользователь? Кликните 
+			<a style="color: lime;" th:href="@{/register}">здесь</a>, чтобы зарегистрироваться.</p>
+		
+		<form method="post" th:action="@{/auth}">
+			
+			<label for="username">Имя пользователя: </label>
+			<input type="text" name="username"><br>
+			
+			<label for="password">Пароль..................: </label>
+			<input type="password" name="password"><br>
+			
+			<br>
+			<button>Войти в систему</button>
+		</form>
+	</div>
+</body>
+
+</html>
