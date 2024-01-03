@@ -7,12 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import recipes.client.services.SessionService;
 import recipes.client.services.UserRestService;
 
 @Controller
@@ -21,6 +23,13 @@ import recipes.client.services.UserRestService;
 public class RegisterController {
 	
 	private final UserRestService service;
+	
+	private final SessionService sessionService;
+	
+	@ModelAttribute("isLoggedIn")
+	public Boolean isLoggedIn() {
+		return sessionService.isLoggedIn();
+	}
 	
 	@GetMapping
 	public String openRegisterForm() {

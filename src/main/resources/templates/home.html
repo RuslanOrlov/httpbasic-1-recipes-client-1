@@ -14,21 +14,17 @@
 		<div class="block" id="pageHeader" 
 				style="display: flex; align-items: center; justify-content: end;">
 			
-			<form method="get" th:action="@{/register}">
+			<!--<form method="get" th:action="@{/register}">
 				<button>Создать пользователя</button>
-			</form>
+			</form>-->
 			
-			<form method="get" th:action="@{/auth}">
-				<button>Войти в приложение</button>
-			</form>
-			
-			<!--<form th:if="${isLoggedIn}" method="post" th:action="@{/logout}">
+			<form th:if="${isLoggedIn}" method="get" th:action="@{/logout}">
 				<button>Выйти из приложения</button>
 			</form>
 			
-			<form th:if="${not isLoggedIn}" method="get" th:action="@{/login}">
+			<form th:if="${not isLoggedIn}" method="get" th:action="@{/auth}">
 				<button>Войти в приложение</button>
-			</form>-->
+			</form>
 		</div>
 		
 		<div class="blockCenter" id="dataArea">

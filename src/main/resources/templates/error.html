@@ -13,20 +13,20 @@
 		
 		<div class="block" id="pageHeader" 
 				style="display: flex; align-items: center; justify-content: end;">
-			<!--<form th:if="${isLoggedIn}" method="post" th:action="@{/logout}">
+			<form th:if="${isLoggedIn}" method="get" th:action="@{/logout}">
 				<button>Выйти из приложения</button>
 			</form>
 			
-			<form th:if="${not isLoggedIn}" method="get" th:action="@{/login}">
+			<form th:if="${not isLoggedIn}" method="get" th:action="@{/auth}">
 				<button>Войти в приложение</button>
-			</form>-->
+			</form>
 		</div>
 		
 		<div class="areaForMessages" id="dataArea">
 			<h2>Упс, что-то пошло не так!</h2>
 			<p th:text="'Status code:' + ${statusCode}"></p>
 			<p th:text="${body}"></p>
-			<p><a style="color: red;" th:href="@{/register}">Вернитесь</a> 
+			<p><a style="color: red;" th:href="@{/}">Вернитесь к началу</a> 
 				и попробуйте еще раз!</p>
 		</div>
 		

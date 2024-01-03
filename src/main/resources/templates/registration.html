@@ -12,13 +12,13 @@
 		
 		<div class="block" id="pageHeader" 
 				style="display: flex; align-items: center; justify-content: end;">
-			<!--<form th:if="${isLoggedIn}" method="post" th:action="@{/logout}">
+			<form th:if="${isLoggedIn}" method="get" th:action="@{/logout}">
 				<button>Выйти из приложения</button>
 			</form>
 			
-			<form th:if="${not isLoggedIn}" method="get" th:action="@{/login}">
+			<form th:if="${not isLoggedIn}" method="get" th:action="@{/auth}">
 				<button>Войти в приложение</button>
-			</form>-->
+			</form>
 		</div>
 		
 		<div class="areaForData" id="dataArea">
