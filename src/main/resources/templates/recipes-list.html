@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Recipes List</title>
+	<link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+
+<body>
+	<div class="grid">
+		
+		<div class="block" id="pageHeader" 
+				style="display: flex; align-items: center; justify-content: end;">
+			<form th:if="${isLoggedIn}" method="get" th:action="@{/logout}">
+				<button>Выйти из приложения</button>
+			</form>
+			
+			<form th:if="${not isLoggedIn}" method="get" th:action="@{/auth}">
+				<button>Войти в приложение</button>
+			</form>
+		</div>
+		
+		<div class="areaForData" id="dataArea"
+				th:switch="${recipes.isEmpty()}">
+			<h2>Список рецептов</h2>
+			
+			<div style="display: table;">
+				<div style="display: table-cell; width: 35%;">
+					<form th:method="get" th:action="@{/recipes/new}">
+						<button>Создать рецепт</button>
+					</form>
+				</div>
+				
+				<div style="display: table-cell; width: 20%;">
+					<form style="display: table;" th:object="${props}" 
+							th:method="get" 
+							th:action="@{/recipes/filter}">
+						<button style=" margin-right: 20px;" 
+							th:text="*{isFiltering}? 'Выключить фильтр' : 'Включить фильтр'"></button>
+					</form>
+				</div>
+				
+				<div style="display: table-cell;">
+					<form style="display: table;" th:object="${props}" 
+							th:method="get" 
+							th:action="@{/recipes/query}">
+						
+						<label for="value">Искать по значению:</label>
+						<input th:if="*{!isFiltering}" readonly class="readonlyField"
+								type="text" name="value" id="value" th:value="*{filteringValueUI}" 
+								style="display: table-cell; margin-left: 10px; margin-right: 10px;">
+						<input th:if="*{isFiltering}" 
+								type="text" name="value" id="value" th:value="*{filteringValueUI}" 
+								style="display: table-cell; margin-left: 10px; margin-right: 10px;">
+						
+						<button th:if="*{!isFiltering}" disabled
+								style="display: table-cell; margin-left: 10px;">Отфильтровать</button>
+						<button th:if="*{isFiltering}" 
+								style="display: table-cell; margin-left: 10px;">Отфильтровать</button>
+					</form>		
+				</div>
+			</div>			
+			
+			<div th:case="true">
+				<br><hr>
+        		<h2  style="color: red; font-size: 125%" 
+        			th:text="'Ни одного рецепта не найдено!'">text</h2>
+        		<table class="scroll-table" border="2" cellpadding="5"></table>
+			</div>
+			
+			<div th:case="false">
+				<br><hr>
+        		<h2  style="color: red; font-size: 125%" 
+        			th:text="'Всего найдено ' + ${recipes.size()} + ' рецептов:'">text</h2>
+        		
+        		<table class="scroll-table" border="2" cellpadding="5">
+					<tr>
+						<th>Id</th>
+						<th>Название</th>
+						<th>Описание</th>
+						<th colspan="3">Операции со списком</th>
+					</tr>
+					<tr th:each="recipe : ${recipes}">
+						<td th:text="${recipe.getId()}">
+						<td th:text="${recipe.getName()} == null ? 
+											${recipe.getName()} : 
+											(${recipe.getName().length()} > 15 ? 
+													${recipe.getName().substring(0, 12)} + '...' : 
+													${recipe.getName()})">
+						<td th:text="${recipe.getDescription()} == null ? 
+											${recipe.getDescription()} : 
+											(${recipe.getDescription().length()} > 30 ? 
+													${recipe.getDescription().substring(0, 27)} + '...' : 
+													${recipe.getDescription()})">
+						<td> 
+							<a th:href="@{/recipes/{id}(id=${recipe.getId()})}">Открыть</a>
+						</td>
+						<td>
+							<a th:href="@{/recipes/{id}/edit(id=${recipe.getId()})}">Изменить</a>
+						</td>
+						<td>
+							<a th:href="@{/recipes/{id}/delete(id=${recipe.getId()})}">Удалить</a>
+						</td>
+					</tr>
+				</table>
+        		
+			</div>
+			
+			<div style="display: table;">
+				<div th:if="${!props.isPaging}" style="display: table-cell; width: 88%;">
+					<br><a th:href="@{/recipes/paging}" th:text="'постранично'">text</a>
+					<span style="padding-left: 10px; color: darkblue;">
+						(для управления постраничным отображением перейдите <b>по ссылке слева</b>)</span>
+				</div>
+				
+				<div th:if="${props.isPaging}" style="display: table-cell; width: 88%;">
+					<br>
+					<form style="display: table;" th:object="${props}" 
+							th:method="post" th:action="@{/recipes/change-page-size}">
+						<a style="display: table-cell;" 
+							th:href="@{/recipes/paging}"
+							th:text="'без страниц'">text</a>
+						
+						<div style="display: table-cell;" >
+							<input style="margin-left: 10px; margin-right: 10px; width: 25px;" 
+									type="text" th:field="*{pageSize}">
+						</div>
+					
+						<button type="submit" style="display: table-cell;">Изменить страницу</button>
+						
+						<a style="display: table-cell; padding-left: 10px;" 
+							th:href="@{/recipes/first}"
+							th:text="'<<---'">text</a>
+						
+						<a style="display: table-cell; padding-left: 10px;" 
+							th:href="@{/recipes/prev}"
+							th:text="'<---'">text</a>
+						
+						<span style="display: table-cell; padding-left: 10px; padding-right: 10px;" 
+								th:text="*{curPage} + 1">text</span>
+						
+						<a style="display: table-cell; padding-right: 10px;" 
+							th:href="@{/recipes/next}"
+							th:text="'--->'">text</a>
+						
+						<a style="display: table-cell;" 
+							th:href="@{/recipes/last}"
+							th:text="'--->>'">text</a>
+					</form>
+				</div>
+				
+				<div style="display: table-cell">
+					<br>
+					<form th:method="get" th:action="@{/recipes/export-to-pdf}">
+						<button disabled>Экспорт в PDF</button>
+					</form>
+				</div>
+			</div>
+			
+			
+		</div>
+		
+		<div class="block" id="serviceArea">
+			<br><br><b><a th:href="@{/}">Вернуться на домашнюю страницу ...</a></b>
+		</div>
+		
+		<div class="block" id="pageFooter"></div>
+		
+	</div>
+</body>
+
+</html>

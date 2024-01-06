@@ -17,5 +17,13 @@ public class SessionService {
 		}
 		return (Boolean) httpSession.getAttribute("isAuth");
 	}
+	
+	public String getAuthHeader() {
+		return (String) httpSession.getAttribute("token");
+	}
+
+	public String getUsername() {
+		return (String) httpSession.getAttribute("username");
+	}
 
 }

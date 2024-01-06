@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Error Page</title>
+	<title>Recipe Card</title>
 	<link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 
@@ -22,16 +22,33 @@
 			</form>
 		</div>
 		
-		<div class="areaForMessages" id="dataArea">
-			<h2>Упс, что-то пошло не так!</h2>
-			<p th:text="'Status code:' + ${statusCode}"></p>
-			<p th:text="${body}"></p>
-			<p><a style="color: red;" th:href="@{/}">Вернитесь к началу</a> 
-				и попробуйте еще раз!</p>
+		<div class="areaForData" id="dataArea">
+			<h2>Карточка рецепта</h2>
+			<table border="2" cellpadding="5">
+				<tr>
+					<th align="right">Id</th>
+					<td th:text="${recipe.getId()}">
+				</tr>
+				<tr>
+					<th align="right">Название</th>
+					<td th:text="${recipe.getName()}">
+				</tr>
+				<tr>
+					<th align="right">Описание</th>
+					<td>
+						<textarea disabled rows="4" cols="50" 
+									th:text="${recipe.getDescription()}"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<td align="right" colspan="2"> 
+						<a th:href="@{/recipes}">Вернуться</a> </td>
+				</tr>
+			</table>
 		</div>
 		
 		<div class="block" id="serviceArea">
-			<br><br><b><a th:href="@{/}">На главную страницу ...</a></b>
+			<br><br><b><a th:href="@{/recipes}">Вернуться в рецепты ...</a></b>
 		</div>
 		
 		<div class="block" id="pageFooter"></div>
