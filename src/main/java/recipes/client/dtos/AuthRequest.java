@@ -1,4 +1,4 @@
-package recipes.client.dto;
+package recipes.client.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

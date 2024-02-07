@@ -9,7 +9,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import recipes.client.dto.AuthRequest;
+import recipes.client.dtos.AuthRequest;
 import recipes.client.services.UserRestService;
 
 @Controller

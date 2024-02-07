@@ -1,4 +1,6 @@
-package recipes.client.dto;
+package recipes.client.dtos;
+
+import java.util.List;
 
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -19,5 +21,7 @@ public class Recipe {
 	
 	@Size(max = 255, message = "Длина описания не может превышать 255 символов!")
 	private String description;
+	
+	private List<IngredientDTO> ingredients;
 	
 }

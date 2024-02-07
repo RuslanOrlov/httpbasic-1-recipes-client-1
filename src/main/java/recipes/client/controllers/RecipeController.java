@@ -19,8 +19,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
-import recipes.client.dto.Recipe;
+import recipes.client.dtos.Recipe;
 import recipes.client.props.RecipeProps;
 import recipes.client.services.RecipeRestService;
 import recipes.client.services.SessionService;
@@ -262,7 +261,7 @@ public class RecipeController {
 		
 		model.addAttribute("oldName", recipe.getName());
 		model.addAttribute("oldDescription", recipe.getDescription());
-		model.addAttribute("recipe", new Recipe(recipe.getId(), null, null));
+		model.addAttribute("recipe", new Recipe(recipe.getId(), null, null, null));
 		
 		return "recipe-edit";
 	}
@@ -273,7 +272,7 @@ public class RecipeController {
 		if (errors.hasErrors()) 
 			return "recipe-edit";
 		
-		Recipe patch = new Recipe(null, null, null);
+		Recipe patch = new Recipe(null, null, null, null);
 		
 		if (recipe.getName() != null && recipe.getName().trim().length() > 0)
 			patch.setName(recipe.getName().trim());

@@ -1,4 +1,4 @@
-package recipes.client.dto;
+package recipes.client.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

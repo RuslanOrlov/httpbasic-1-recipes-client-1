@@ -15,7 +15,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
-import recipes.client.dto.Recipe;
+import recipes.client.dtos.Recipe;
+import recipes.client.dtos.RecipeWrapper;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +39,7 @@ public class RecipeRestService {
 	
 	public List<Recipe> getAllRecipes() throws HttpClientErrorException {
 		List<Recipe> recipes = new ArrayList<>();
+		List<RecipeWrapper> wrappers = new ArrayList<>();
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		
@@ -46,13 +48,16 @@ public class RecipeRestService {
 		
 		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
 		
-		ResponseEntity<Recipe[]> response = 
+		ResponseEntity<RecipeWrapper[]> response = 
 				this.restTemplate.exchange(
 						this.urlWithSort, HttpMethod.GET, 
-						requestEntity, Recipe[].class, "id");
+						requestEntity, RecipeWrapper[].class, "id");
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			recipes = Arrays.asList(response.getBody());
+			wrappers = Arrays.asList(response.getBody());
+			for (RecipeWrapper wrapper : wrappers) {
+				recipes.add(wrapper.getRecipe());
+			}
 		}
 		
 		return recipes;
@@ -62,6 +67,7 @@ public class RecipeRestService {
 			Integer curPage, Integer pageSize
 			) throws HttpClientErrorException {
 		List<Recipe> recipes = new ArrayList<>();
+		List<RecipeWrapper> wrappers = new ArrayList<>();
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		
@@ -69,13 +75,16 @@ public class RecipeRestService {
 		
 		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
 		
-		ResponseEntity<Recipe[]> response = 
+		ResponseEntity<RecipeWrapper[]> response = 
 				this.restTemplate.exchange(
 						this.urlWithSortAndPage, HttpMethod.GET, 
-						requestEntity, Recipe[].class, "id", curPage, pageSize);
+						requestEntity, RecipeWrapper[].class, "id", curPage, pageSize);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			recipes = Arrays.asList(response.getBody());
+			wrappers = Arrays.asList(response.getBody());
+			for (RecipeWrapper wrapper : wrappers) {
+				recipes.add(wrapper.getRecipe());
+			}
 		}
 		
 		return recipes;
@@ -83,6 +92,7 @@ public class RecipeRestService {
 	
 	public List<Recipe> getAllRecipes(String value) throws HttpClientErrorException {
 		List<Recipe> recipes = new ArrayList<>();
+		List<RecipeWrapper> wrappers = new ArrayList<>();
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		
@@ -90,13 +100,16 @@ public class RecipeRestService {
 		
 		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
 		
-		ResponseEntity<Recipe[]> response = 
+		ResponseEntity<RecipeWrapper[]> response = 
 				this.restTemplate.exchange(
 						this.urlQuery, HttpMethod.GET, 
-						requestEntity, Recipe[].class, value);
+						requestEntity, RecipeWrapper[].class, value);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			recipes = Arrays.asList(response.getBody());
+			wrappers = Arrays.asList(response.getBody());
+			for (RecipeWrapper wrapper : wrappers) {
+				recipes.add(wrapper.getRecipe());
+			}
 		}
 		
 		return recipes;
@@ -106,6 +119,7 @@ public class RecipeRestService {
 			Integer curPage, Integer pageSize, String value
 			) throws HttpClientErrorException {
 		List<Recipe> recipes = new ArrayList<>();
+		List<RecipeWrapper> wrappers = new ArrayList<>();
 		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		
@@ -113,16 +127,19 @@ public class RecipeRestService {
 		
 		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
 		
-		ResponseEntity<Recipe[]> response = 
+		ResponseEntity<RecipeWrapper[]> response = 
 				this.restTemplate.exchange(
 						this.urlPagingQuery, HttpMethod.GET, 
-						requestEntity, Recipe[].class, value, curPage*pageSize, pageSize);
+						requestEntity, RecipeWrapper[].class, value, curPage*pageSize, pageSize);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			recipes = Arrays.asList(response.getBody());
+			wrappers = Arrays.asList(response.getBody());
+			for (RecipeWrapper wrapper : wrappers) {
+				recipes.add(wrapper.getRecipe());
+			}
 		}
 		
-		return recipes;
+		return recipes; // Остановился здесь
 	}
 		
 	public Integer countAll(Boolean isFiltering, String value) throws HttpClientErrorException {

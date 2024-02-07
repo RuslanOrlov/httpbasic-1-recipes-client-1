@@ -10,8 +10,8 @@ import org.springframework.web.client.RestTemplate;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import recipes.client.controllers.RegistrationForm;
-import recipes.client.dto.AuthRequest;
-import recipes.client.dto.RegisterRequest;
+import recipes.client.dtos.AuthRequest;
+import recipes.client.dtos.RegisterRequest;
 
 @Service
 @RequiredArgsConstructor

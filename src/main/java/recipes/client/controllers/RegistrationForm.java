@@ -4,7 +4,7 @@ import org.springframework.util.StringUtils;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import recipes.client.dto.RegisterRequest;
+import recipes.client.dtos.RegisterRequest;
 
 @Data
 public class RegistrationForm {
