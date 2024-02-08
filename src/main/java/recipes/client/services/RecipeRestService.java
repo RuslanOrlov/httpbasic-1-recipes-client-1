@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
 import recipes.client.dtos.Recipe;
+import recipes.client.dtos.RecipeDTO;
 import recipes.client.dtos.RecipeWrapper;
 
 @Service
@@ -139,7 +140,7 @@ public class RecipeRestService {
 			}
 		}
 		
-		return recipes; // Остановился здесь
+		return recipes;
 	}
 		
 	public Integer countAll(Boolean isFiltering, String value) throws HttpClientErrorException {
@@ -173,12 +174,12 @@ public class RecipeRestService {
 		
 		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
 		
-		ResponseEntity<Recipe> response = 
+		ResponseEntity<RecipeWrapper> response = 
 				this.restTemplate.exchange(this.urlById, HttpMethod.GET, 
-										requestEntity, Recipe.class, id);
+										requestEntity, RecipeWrapper.class, id);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody();
+			return response.getBody().getRecipe();
 		}
 		return null;
 	}
@@ -189,14 +190,15 @@ public class RecipeRestService {
 		
 		httpHeaders.add("Authorization", sessionService.getAuthHeader());
 				
-		HttpEntity<Recipe> requestEntity = new HttpEntity<Recipe>(recipe, httpHeaders);
+		HttpEntity<RecipeWrapper> requestEntity = 
+				new HttpEntity<RecipeWrapper>(recipe.getRecipeWrapper(), httpHeaders);
 		
-		ResponseEntity<Recipe> response = 
+		ResponseEntity<RecipeWrapper> response = 
 				this.restTemplate.postForEntity(this.url, requestEntity, 
-												Recipe.class);
+												RecipeWrapper.class);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody();
+			return response.getBody().getRecipe();
 		}
 		return null;
 	}
@@ -207,15 +209,15 @@ public class RecipeRestService {
 		
 		httpHeaders.add("Authorization", sessionService.getAuthHeader());
 		
-		HttpEntity<Recipe> requestEntity = 
-				new HttpEntity<Recipe>(patch, httpHeaders);
+		HttpEntity<RecipeDTO> requestEntity = 
+				new HttpEntity<RecipeDTO>(patch.getRecipeDTO(), httpHeaders);
 		
-		ResponseEntity<Recipe> response = 
+		ResponseEntity<RecipeWrapper> response = 
 				this.restTemplate.exchange(this.urlById, HttpMethod.PUT, 
-						requestEntity, Recipe.class, id);
+						requestEntity, RecipeWrapper.class, id);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody();
+			return response.getBody().getRecipe();
 		}
 		return null;
 	}
@@ -228,7 +230,7 @@ public class RecipeRestService {
 		HttpEntity<Object> requestEntity = new HttpEntity<>(httpHeaders);
 		
 		this.restTemplate.exchange(this.urlById, HttpMethod.DELETE, 
-										requestEntity, Recipe.class, id);
-	}
+										requestEntity, Void.class, id);
+	} // Закончил, протестировать !!! 
 	
 }

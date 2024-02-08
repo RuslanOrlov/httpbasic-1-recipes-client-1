@@ -24,4 +24,23 @@ public class Recipe {
 	
 	private List<IngredientDTO> ingredients;
 	
+	public RecipeWrapper getRecipeWrapper() {
+		return RecipeWrapper.builder()
+				.recipe(RecipeDTO.builder()
+						.id(id)
+						.name(name)
+						.description(description)
+						.build())
+				.ingredients(ingredients)
+				.build();
+	}
+	
+	public RecipeDTO getRecipeDTO() {
+		return RecipeDTO.builder()
+				.id(id)
+				.name(name)
+				.description(description)
+				.build();
+	}
+	
 }
