@@ -15,10 +15,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
+//import lombok.extern.slf4j.Slf4j;
 import recipes.client.dtos.Recipe;
 import recipes.client.dtos.RecipeDTO;
 import recipes.client.dtos.RecipeWrapper;
 
+//@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecipeRestService {
@@ -57,7 +59,7 @@ public class RecipeRestService {
 		if (response.getStatusCode().is2xxSuccessful()) {
 			wrappers = Arrays.asList(response.getBody());
 			for (RecipeWrapper wrapper : wrappers) {
-				recipes.add(wrapper.getRecipe());
+				recipes.add(wrapper.createRecipe());
 			}
 		}
 		
@@ -84,7 +86,7 @@ public class RecipeRestService {
 		if (response.getStatusCode().is2xxSuccessful()) {
 			wrappers = Arrays.asList(response.getBody());
 			for (RecipeWrapper wrapper : wrappers) {
-				recipes.add(wrapper.getRecipe());
+				recipes.add(wrapper.createRecipe());
 			}
 		}
 		
@@ -109,7 +111,7 @@ public class RecipeRestService {
 		if (response.getStatusCode().is2xxSuccessful()) {
 			wrappers = Arrays.asList(response.getBody());
 			for (RecipeWrapper wrapper : wrappers) {
-				recipes.add(wrapper.getRecipe());
+				recipes.add(wrapper.createRecipe());
 			}
 		}
 		
@@ -136,7 +138,7 @@ public class RecipeRestService {
 		if (response.getStatusCode().is2xxSuccessful()) {
 			wrappers = Arrays.asList(response.getBody());
 			for (RecipeWrapper wrapper : wrappers) {
-				recipes.add(wrapper.getRecipe());
+				recipes.add(wrapper.createRecipe());
 			}
 		}
 		
@@ -179,7 +181,7 @@ public class RecipeRestService {
 										requestEntity, RecipeWrapper.class, id);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody().getRecipe();
+			return response.getBody().createRecipe();
 		}
 		return null;
 	}
@@ -191,14 +193,14 @@ public class RecipeRestService {
 		httpHeaders.add("Authorization", sessionService.getAuthHeader());
 				
 		HttpEntity<RecipeWrapper> requestEntity = 
-				new HttpEntity<RecipeWrapper>(recipe.getRecipeWrapper(), httpHeaders);
+				new HttpEntity<RecipeWrapper>(recipe.createRecipeWrapper(), httpHeaders);
 		
 		ResponseEntity<RecipeWrapper> response = 
 				this.restTemplate.postForEntity(this.url, requestEntity, 
 												RecipeWrapper.class);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody().getRecipe();
+			return response.getBody().createRecipe();
 		}
 		return null;
 	}
@@ -210,14 +212,14 @@ public class RecipeRestService {
 		httpHeaders.add("Authorization", sessionService.getAuthHeader());
 		
 		HttpEntity<RecipeDTO> requestEntity = 
-				new HttpEntity<RecipeDTO>(patch.getRecipeDTO(), httpHeaders);
+				new HttpEntity<RecipeDTO>(patch.createRecipeDTO(), httpHeaders);
 		
 		ResponseEntity<RecipeWrapper> response = 
 				this.restTemplate.exchange(this.urlById, HttpMethod.PUT, 
 						requestEntity, RecipeWrapper.class, id);
 		
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody().getRecipe();
+			return response.getBody().createRecipe();
 		}
 		return null;
 	}

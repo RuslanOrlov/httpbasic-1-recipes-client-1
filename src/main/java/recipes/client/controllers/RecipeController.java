@@ -19,11 +19,13 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+//import lombok.extern.slf4j.Slf4j;
 import recipes.client.dtos.Recipe;
 import recipes.client.props.RecipeProps;
 import recipes.client.services.RecipeRestService;
 import recipes.client.services.SessionService;
 
+//@Slf4j
 @Controller
 @RequestMapping("/recipes")
 @RequiredArgsConstructor
@@ -232,8 +234,9 @@ public class RecipeController {
 	
 	@PostMapping
 	public String postRecipe(
-			@Valid @ModelAttribute("recipe") Recipe recipe, 
+			@Valid Recipe recipe, 
 			BindingResult errors) {
+		
 		if (errors.hasErrors()) 
 			return "recipe-create";
 		
@@ -261,18 +264,20 @@ public class RecipeController {
 		
 		model.addAttribute("oldName", recipe.getName());
 		model.addAttribute("oldDescription", recipe.getDescription());
-		model.addAttribute("recipe", new Recipe(recipe.getId(), null, null, null));
+		model.addAttribute("recipe", new Recipe(recipe.getId(), null, null));
 		
 		return "recipe-edit";
 	}
 	
 	@PutMapping
-	public String putRecipe(@Valid @ModelAttribute("recipe") Recipe recipe, 
-							BindingResult errors) {
+	public String putRecipe(
+			@Valid Recipe recipe, 
+			BindingResult errors) {
+		
 		if (errors.hasErrors()) 
 			return "recipe-edit";
 		
-		Recipe patch = new Recipe(null, null, null, null);
+		Recipe patch = new Recipe(null, null, null);
 		
 		if (recipe.getName() != null && recipe.getName().trim().length() > 0)
 			patch.setName(recipe.getName().trim());

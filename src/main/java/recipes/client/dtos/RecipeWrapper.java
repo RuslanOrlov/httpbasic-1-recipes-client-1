@@ -16,7 +16,7 @@ public class RecipeWrapper {
 	private RecipeDTO recipe;
 	private List<IngredientDTO> ingredients;
 	
-	public Recipe getRecipe() {
+	public Recipe createRecipe() {
 		return Recipe.builder()
 				.id(recipe.getId())
 				.name(recipe.getName())

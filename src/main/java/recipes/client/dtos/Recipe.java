@@ -1,5 +1,6 @@
 package recipes.client.dtos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.Size;
@@ -22,16 +23,23 @@ public class Recipe {
 	@Size(max = 255, message = "Длина описания не может превышать 255 символов!")
 	private String description;
 	
-	private List<IngredientDTO> ingredients;
+	@Builder.Default
+	private List<IngredientDTO> ingredients = new ArrayList<>();
 	
-	public RecipeWrapper getRecipeWrapper() {
+	public Recipe(Long id, String name, String description) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+	}
+	
+	public RecipeWrapper createRecipeWrapper() {
 		return RecipeWrapper.builder()
-				.recipe(getRecipeDTO())
+				.recipe(createRecipeDTO())
 				.ingredients(ingredients)
 				.build();
 	}
 	
-	public RecipeDTO getRecipeDTO() {
+	public RecipeDTO createRecipeDTO() {
 		return RecipeDTO.builder()
 				.id(id)
 				.name(name)
