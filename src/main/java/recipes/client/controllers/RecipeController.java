@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 //import com.itextpdf.text.DocumentException;
@@ -28,6 +30,7 @@ import recipes.client.services.SessionService;
 //@Slf4j
 @Controller
 @RequestMapping("/recipes")
+@SessionAttributes("recipe")
 @RequiredArgsConstructor
 public class RecipeController {
 	
@@ -178,7 +181,9 @@ public class RecipeController {
 	 * */
 	
 	@GetMapping
-	public String getAllRecipes(Model model) {
+	public String getAllRecipes(Model model, SessionStatus sessionStatus) {
+		sessionStatus.setComplete();
+		
 		model.addAttribute("props", recipeProps);
 		try {
 			model.addAttribute("recipes", formRecipesList());
@@ -228,7 +233,7 @@ public class RecipeController {
 	}
 	
 	@GetMapping("/new")
-	public String openCreateRecipeForm(@ModelAttribute("recipe") Recipe recipe) {
+	public String openCreateRecipeForm(/*@ModelAttribute("recipe")*/ Recipe recipe) {
 		return "recipe-create";
 	}
 	
@@ -252,7 +257,7 @@ public class RecipeController {
 	}
 	
 	@GetMapping("/{id}/edit")
-	public String openEditForm(@PathVariable Long id, Model model) {
+	public String openEditRecipeForm(@PathVariable Long id, Model model) {
 		Recipe recipe = null;
 		try {
 			recipe = recipeService.getRecipeById(id);
@@ -293,6 +298,22 @@ public class RecipeController {
 		}
 		
 		return "redirect:/recipes";
+	}
+	
+	@GetMapping("/{id}/ingredients")
+	public String showIngredients(@PathVariable Long id, Model model) {
+		Recipe recipe = null;
+		try {
+			recipe = recipeService.getRecipeById(id);
+		} catch (HttpClientErrorException ex) {
+			int statusCode = ex.getStatusCode().value();
+			String body = ex.getResponseBodyAsString();			
+			return "redirect:/error?statusCode=" + statusCode + "&body=" + body;
+		}
+		
+		model.addAttribute("recipe", recipe);
+		
+		return "redirect:/ingredients";
 	}
 	
 	@GetMapping("/{id}/delete")

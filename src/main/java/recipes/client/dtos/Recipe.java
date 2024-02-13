@@ -3,6 +3,7 @@ package recipes.client.dtos;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ public class Recipe {
 	private Long id;
 	
 	@Size(max = 255, message = "Длина наименования не может превышать 255 символов!")
+	@NotBlank(message = "Название рецепта не может быть пустым!")
 	private String name;
 	
 	@Size(max = 255, message = "Длина описания не может превышать 255 символов!")
