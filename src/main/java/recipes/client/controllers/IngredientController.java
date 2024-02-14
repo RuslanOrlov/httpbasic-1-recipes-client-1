@@ -1,8 +1,5 @@
 package recipes.client.controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -52,9 +49,13 @@ public class IngredientController {
 	 * */
 	
 	@GetMapping
-	public String getAllIngredientsOfOneRecipe(Model model, @ModelAttribute Recipe recipe) {		
+	public String getAllIngredientsOfOneRecipe(Model model, @ModelAttribute Recipe recipe) {
+		// Здесь получаем из модели атрибут "recipe" 
+		// путем внедрения его как параметр метода
 		try {
-			model.addAttribute("ingredients", formIngredientsList(recipe));
+			Recipe requested = formIngredientsList(recipe);
+			model.addAttribute("recipe", requested);
+			model.addAttribute("ingredients", requested.getIngredients());
 		} catch (HttpClientErrorException ex) {
 			int statusCode = ex.getStatusCode().value();
 			String body = ex.getResponseBodyAsString();			
@@ -64,23 +65,21 @@ public class IngredientController {
 		return "ingredients-list";
 	}
 	
-	private List<IngredientDTO> formIngredientsList(Recipe recipe) 
+	private Recipe formIngredientsList(Recipe recipe) 
 			throws HttpClientErrorException {
-		List<IngredientDTO> ingredients = new ArrayList<>();
-		
-		ingredients = ingredientService.getAllIngredientsOfOneRecipe(recipe);
-		
-		return ingredients;
+		return ingredientService.getAllIngredientsOfOneRecipe(recipe).createRecipe();
 	}
 	
 	@GetMapping("/{id}")
 	public String getOneIngredientOfOneRecipe(@PathVariable Long id, Model model) {
+		// Здесь получаем атрибут "recipe", извлекая 
+		// его из модели с помощью метода getAttribute() 
 		Recipe recipe = (Recipe) model.getAttribute("recipe");
 		
 		try {
-			IngredientWrapper wrapper = ingredientService.getOneIngredientOfOneRecipe(recipe, id);
-			model.addAttribute("recipeDto", wrapper.getRecipe());
-			model.addAttribute("ingredientDto", wrapper.getIngredient());
+			IngredientWrapper requested = ingredientService
+											.getOneIngredientOfOneRecipe(recipe, id);
+			model.addAttribute("ingredient", requested.getIngredient());
 		} catch (HttpClientErrorException ex) {
 			int statusCode = ex.getStatusCode().value();
 			String body = ex.getResponseBodyAsString();			
@@ -100,7 +99,9 @@ public class IngredientController {
 	public String postIngredient(
 			@Valid IngredientDTO ingredient, 
 			BindingResult errors, 
-			@ModelAttribute("recipe") Recipe recipe) {
+			@ModelAttribute Recipe recipe) {
+		// Здесь получаем из модели атрибут "recipe" 
+		// путем внедрения его как параметр метода
 		if (errors.hasErrors()) 
 			return "ingredient-create";
 		
@@ -124,7 +125,10 @@ public class IngredientController {
 	
 	@GetMapping("/{id}/edit")
 	public String openEditIngredientForm(@PathVariable Long id, Model model) {
+		// Здесь получаем атрибут "recipe", извлекая 
+		// его из модели с помощью метода getAttribute() 
 		Recipe recipe = (Recipe) model.getAttribute("recipe");
+		
 		IngredientWrapper wrapper = new IngredientWrapper();
 		
 		try {
@@ -136,7 +140,8 @@ public class IngredientController {
 		}
 		
 		model.addAttribute("oldName", wrapper.getIngredient().getName());
-		model.addAttribute("ingredient", new IngredientDTO());
+		model.addAttribute("ingredient", 
+								new IngredientDTO(wrapper.getIngredient().getId(), null));
 		
 		return "ingredient-edit";
 	}
@@ -146,12 +151,14 @@ public class IngredientController {
 			@Valid IngredientDTO ingredient, 
 			BindingResult errors,
 			Model model) {
+		// Здесь получаем атрибут "recipe", извлекая 
+		// его из модели с помощью метода getAttribute() 
 		Recipe recipe = (Recipe) model.getAttribute("recipe");
 		
 		if (errors.hasErrors()) 
 			return "ingredient-edit";
 		
-		IngredientDTO patch = new IngredientDTO();
+		IngredientDTO patch = new IngredientDTO(ingredient.getId(), null);
 		
 		if (ingredient.getName() != null && ingredient.getName().trim().length() > 0)
 			patch.setName(ingredient.getName().trim());
@@ -178,6 +185,20 @@ public class IngredientController {
 	public String deleteIngredient(@PathVariable Long id) {
 		try {
 			ingredientService.deleteIngredient(id);
+		} catch (HttpClientErrorException ex) {
+			int statusCode = ex.getStatusCode().value();
+			String body = ex.getResponseBodyAsString();			
+			return "redirect:/error?statusCode=" + statusCode + "&body=" + body;
+		}
+		return "redirect:/ingredients";
+	}
+	
+	@GetMapping("/{id}/delete-all")
+	public String deleteIngredients(@PathVariable Long id, @ModelAttribute Recipe recipe) {
+		// Здесь получаем из модели атрибут "recipe" 
+		// путем внедрения его как параметр метода
+		try {
+			ingredientService.deleteIngredients(recipe);
 		} catch (HttpClientErrorException ex) {
 			int statusCode = ex.getStatusCode().value();
 			String body = ex.getResponseBodyAsString();			

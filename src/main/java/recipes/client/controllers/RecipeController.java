@@ -233,7 +233,7 @@ public class RecipeController {
 	}
 	
 	@GetMapping("/new")
-	public String openCreateRecipeForm(/*@ModelAttribute("recipe")*/ Recipe recipe) {
+	public String openCreateRecipeForm(Recipe recipe) {
 		return "recipe-create";
 	}
 	

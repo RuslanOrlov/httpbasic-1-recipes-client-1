@@ -1,8 +1,5 @@
 package recipes.client.services;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,9 +10,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
-import recipes.client.dtos.IngredientDTO;
 import recipes.client.dtos.IngredientWrapper;
 import recipes.client.dtos.Recipe;
+import recipes.client.dtos.RecipeDTO;
 import recipes.client.dtos.RecipeWrapper;
 
 @Service
@@ -46,7 +43,7 @@ private final SessionService sessionService;
 //	private String urlPagingQuery 		= "http://localhost:8080/api/v1/ingredients?value={value}"
 //											+ "&offset={offset}&limit={limit}";
 	
-	public List<IngredientDTO> getAllIngredientsOfOneRecipe(
+	public RecipeWrapper getAllIngredientsOfOneRecipe(
 			Recipe recipe) throws HttpClientErrorException {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", sessionService.getAuthHeader());
@@ -59,13 +56,11 @@ private final SessionService sessionService;
 						this.urlForGetIngredients, HttpMethod.GET, 
 						requestEntity, RecipeWrapper.class, recipe.getId());
 		
-		List<IngredientDTO> ingredients = new ArrayList<>();
+		RecipeWrapper requested = null;
 		if (response.getStatusCode().is2xxSuccessful()) {
-			if (response.getBody().getIngredients() != null)
-				ingredients = response.getBody().getIngredients();
+			requested = response.getBody();
 		}
-		
-		return ingredients;
+		return requested;
 	}
 
 	public IngredientWrapper getOneIngredientOfOneRecipe(
@@ -83,7 +78,11 @@ private final SessionService sessionService;
 						this.urlForGetIngredient, HttpMethod.GET, 
 						requestEntity, IngredientWrapper.class, recipeId, ingredientId);
 		
-		return response.getBody();
+		IngredientWrapper requested = null;
+		if (response.getStatusCode().is2xxSuccessful()) {
+			requested = response.getBody();
+		}
+		return requested;
 	}
 
 	public IngredientWrapper postIngredient(
@@ -100,7 +99,11 @@ private final SessionService sessionService;
 						this.url, HttpMethod.POST, 
 						requestEntity, IngredientWrapper.class);
 		
-		return response.getBody();
+		IngredientWrapper created = null;
+		if (response.getStatusCode().is2xxSuccessful()) {
+			created = response.getBody();
+		}
+		return created;
 	}
 
 	public IngredientWrapper putIngredient(
@@ -117,11 +120,30 @@ private final SessionService sessionService;
 						this.url, HttpMethod.PUT, 
 						requestEntity, IngredientWrapper.class);
 		
-		return response.getBody();
+		IngredientWrapper updated = null;
+		if (response.getStatusCode().is2xxSuccessful()) {
+			updated = response.getBody();
+		}
+		return updated;
 	}
 
-	public void deleteIngredient(Long id) {
+	public void deleteIngredient(Long id) throws HttpClientErrorException {
 		restTemplate.delete(urlByIngredientId, id);
 	}
-	
+
+	public void deleteIngredients(Recipe recipe) throws HttpClientErrorException {
+		RecipeDTO dto = RecipeDTO.builder()
+				.id(recipe.getId())
+				.name(recipe.getName())
+				.description(recipe.getDescription())
+				.build();
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", sessionService.getAuthHeader());
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<RecipeDTO> requestEntity = new HttpEntity<>(dto, httpHeaders);
+		
+		restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Void.class);
+	}
 }
