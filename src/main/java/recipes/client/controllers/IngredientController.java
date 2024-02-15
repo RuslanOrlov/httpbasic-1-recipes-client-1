@@ -19,7 +19,7 @@ import recipes.client.dtos.IngredientDTO;
 import recipes.client.dtos.IngredientWrapper;
 import recipes.client.dtos.Recipe;
 import recipes.client.dtos.RecipeDTO;
-import recipes.client.props.RecipeProps;
+import recipes.client.props.IngredientProps;
 import recipes.client.services.IngredientRestService;
 import recipes.client.services.SessionService;
 
@@ -45,8 +45,8 @@ public class IngredientController {
 	}
 
 	@ModelAttribute("props")
-	public RecipeProps props() {
-		return new RecipeProps();
+	public IngredientProps props() {
+		return new IngredientProps();
 	}
 	
 	/*

@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Edit Recipe Card</title>
+	<title>Edit Ingredient Card</title>
 	<link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 
@@ -23,9 +23,9 @@
 		</div>
 		
 		<div class="areaForData" id="dataArea">
-			<h2>Изменение рецепта</h2>
+			<h2>Изменение существующего ингредиента</h2>
 			
-			<form th:method="put" th:action="@{/recipes}" th:object="${recipe}">
+			<form th:method="put" th:action="@{/ingredients}" th:object="${ingredient}">
 				
 				<label for="name">Id........................:</label>
 				<input class="readonlyField" readonly type="text" th:field="*{id}">
@@ -42,22 +42,12 @@
 					th:errors="*{name}">Error text</div>
 				<br><br>
 				
-				<label for="description" style="vertical-align: top;">Описание...........:</label>
-				<textarea rows="4" cols="50" th:field="*{description}"></textarea>
-				<!-- -------------------------------------- -->
-				<textarea rows="4" cols="50" th:text="${oldDescription}" 
-						  class="readonlyField" readonly ></textarea>
-				<!-- -------------------------------------- -->
-				<div style="color:red" 
-					th:if="${#fields.hasErrors('description')}"
-					th:errors="*{description}">Error text</div>
-				<br><br>
-				
-				<button>Сохранить рецепт</button>
+				<button>Изменить ингредиент</button>
 			</form>
 		</div>
 		
 		<div class="block" id="serviceArea">
+			<br><br><b><a th:href="@{/ingredients}">Вернуться в ингредиенты ...</a></b>
 			<br><br><b><a th:href="@{/recipes}">Вернуться в рецепты ...</a></b>
 		</div>
 		

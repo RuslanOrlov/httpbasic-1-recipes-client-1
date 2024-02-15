@@ -23,7 +23,7 @@
 		</div>
 		
 		<div class="areaForData" id="dataArea">
-			<h2>Изменение рецепта</h2>
+			<h2>Изменение существующего рецепта</h2>
 			
 			<form th:method="put" th:action="@{/recipes}" th:object="${recipe}">
 				
@@ -53,7 +53,7 @@
 					th:errors="*{description}">Error text</div>
 				<br><br>
 				
-				<button>Сохранить рецепт</button>
+				<button>Изменить рецепт</button>
 			</form>
 		</div>
 		

@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>New Recipe Card</title>
+	<title>New Ingredient Card</title>
 	<link rel="stylesheet" th:href="@{/styles.css}">
 </head>
 
@@ -23,9 +23,9 @@
 		</div>
 		
 		<div class="areaForData" id="dataArea">
-			<h2>Создание нового рецепта</h2>
+			<h2>Создание нового ингредиента</h2>
 			
-			<form th:method="post" th:action="@{/recipes}" th:object="${recipe}">
+			<form th:method="post" th:action="@{/ingredients}" th:object="${ingredient}">
 				
 				<label for="name">Название.........:</label>
 				<input type="text" th:field="*{name}">
@@ -34,18 +34,12 @@
 					th:errors="*{name}">Error text</div>
 				<br><br>
 				
-				<label for="description" style="vertical-align: top;">Описание........:</label>
-				<textarea rows="4" cols="50" th:field="*{description}"></textarea>
-				<div style="color:red" 
-					th:if="${#fields.hasErrors('description')}"
-					th:errors="*{description}">Error text</div>
-				<br><br>
-				
-				<button>Сохранить рецепт</button>
+				<button>Создать ингредиент</button>
 			</form>
 		</div>
 		
 		<div class="block" id="serviceArea">
+			<br><br><b><a th:href="@{/ingredients}">Вернуться в ингредиенты ...</a></b>
 			<br><br><b><a th:href="@{/recipes}">Вернуться в рецепты ...</a></b>
 		</div>
 		
