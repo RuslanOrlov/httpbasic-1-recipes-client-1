@@ -22,27 +22,51 @@
 			</form>
 		</div>
 		
-		<div class="areaForData" id="dataArea">
-			<form method="get" th:action="@{/recipes}" th:object="${recipe}">
-				<label for="name">Id........................:</label>
-				<input class="readonlyField" readonly type="text" th:field="*{id}">
-				<br><br>
-				<label for="name">Название.........:</label>
-				<input class="readonlyField" readonly type="text" th:field="*{name}">
-				<br><br>
-				<label for="description" style="vertical-align: top;">Описание........:</label>
-				<textarea rows="4" cols="50" th:field="*{description}" 
-						class="readonlyField" readonly></textarea>
-				<br><br>				
-				<button>Вернуться</button>
-			</form>
-		</div>
-		
-		<!--<div class="areaForData" id="dataArea"
-				th:switch="${recipes.isEmpty()}">
-			<h2>Список ингредиентов</h2>
+		<div class="areaForData" id="dataArea"
+				th:switch="${ingredients.isEmpty()}">
+			<h2 th:text="${recipe.getName()} == null ? 
+					'Список ингредиентов для рецепта \'\'' + ${recipe.getName()} + '\'\'' : 
+					(${recipe.getName().length()} > 15 ? 
+						'Список ингредиентов для рецепта \'\'' + ${recipe.getName().substring(0, 12)} + '\'\'...' : 
+						'Список ингредиентов для рецепта \'\'' + ${recipe.getName()} + '\'\'')">Text</h2>
 			
 			<div style="display: table;">
+				
+				<!-- <div style="display: table-cell; width: 30%;">
+					
+					<table border="1" cellpadding="5">
+						<tr>
+							<th align="right">Id</th>
+							<td th:text="${recipe.getId()}">
+						</tr>
+						<tr>
+							<th align="right">Название</th>
+							<td th:text="${recipe.getName()}">
+						</tr>
+						<tr>
+							<th align="right">Описание</th>
+							<td>
+								<textarea disabled rows="4" cols="50" 
+											th:text="${recipe.getDescription()}"></textarea>
+							</td>
+						</tr>
+					</table>
+					
+					<form method="get" th:action="@{/recipes}" th:object="${recipe}">
+						<label for="name">Id.................:</label>
+						<input class="readonlyField" readonly type="text" th:field="*{id}">
+						<br>
+						<label for="name">Название....:</label>
+						<input class="readonlyField" readonly type="text" th:field="*{name}">
+						<br>
+						<label for="description" style="vertical-align: top;">Описание...:</label>
+						<textarea rows="4" cols="23" th:field="*{description}" 
+								class="readonlyField" readonly></textarea>
+						<br>				
+						<button>Вернуться в рецепты</button>
+					</form>
+				</div> -->
+				
 				<div style="display: table-cell; width: 35%;">
 					<form th:method="get" th:action="@{/ingredients/new}">
 						<button>Создать ингредиент</button>
@@ -82,42 +106,36 @@
 			<div th:case="true">
 				<br><hr>
         		<h2  style="color: red; font-size: 125%" 
-        			th:text="'Ни одного рецепта не найдено!'">text</h2>
+        			th:text="'Ни одного ингредиента не найдено!'">text</h2>
         		<table class="scroll-table" border="2" cellpadding="5"></table>
 			</div>
 			
 			<div th:case="false">
 				<br><hr>
         		<h2  style="color: red; font-size: 125%" 
-        			th:text="'Всего найдено ' + ${recipes.size()} + ' рецептов:'">text</h2>
+        			th:text="'Всего найдено ' + ${recipes.size()} + ' ингредиентов:'">text</h2>
         		
         		<table class="scroll-table" border="2" cellpadding="5">
 					<tr>
 						<th>Id</th>
 						<th>Название</th>
-						<th>Описание</th>
 						<th colspan="3">Операции со списком</th>
 					</tr>
-					<tr th:each="recipe : ${recipes}">
-						<td th:text="${recipe.getId()}">
-						<td th:text="${recipe.getName()} == null ? 
-											${recipe.getName()} : 
-											(${recipe.getName().length()} > 15 ? 
-													${recipe.getName().substring(0, 12)} + '...' : 
-													${recipe.getName()})">
-						<td th:text="${recipe.getDescription()} == null ? 
-											${recipe.getDescription()} : 
-											(${recipe.getDescription().length()} > 30 ? 
-													${recipe.getDescription().substring(0, 27)} + '...' : 
-													${recipe.getDescription()})">
+					<tr th:each="ingredient : ${ingredients}">
+						<td th:text="${ingredient.getId()}">
+						<td th:text="${ingredient.getName()} == null ? 
+											${ingredient.getName()} : 
+											(${ingredient.getName().length()} > 15 ? 
+													${ingredient.getName().substring(0, 12)} + '...' : 
+													${ingredient.getName()})">
 						<td> 
-							<a th:href="@{/recipes/{id}(id=${recipe.getId()})}">Открыть</a>
+							<a th:href="@{/ingredients/{id}(id=${ingredient.getId()})}">Открыть</a>
 						</td>
 						<td>
-							<a th:href="@{/recipes/{id}/edit(id=${recipe.getId()})}">Изменить</a>
+							<a th:href="@{/ingredients/{id}/edit(id=${ingredient.getId()})}">Изменить</a>
 						</td>
 						<td>
-							<a th:href="@{/recipes/{id}/delete(id=${recipe.getId()})}">Удалить</a>
+							<a th:href="@{/ingredients/{id}/delete(id=${ingredient.getId()})}">Удалить</a>
 						</td>
 					</tr>
 				</table>
@@ -176,9 +194,10 @@
 			</div>
 			
 			
-		</div>-->
+		</div>
 		
 		<div class="block" id="serviceArea">
+			<br><br><b><a th:href="@{/recipes}">Вернуться в рецепты ...</a></b>
 			<br><br><b><a th:href="@{/}">Вернуться на домашнюю страницу ...</a></b>
 		</div>
 		

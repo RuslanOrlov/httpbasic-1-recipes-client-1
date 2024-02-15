@@ -19,6 +19,7 @@ import recipes.client.dtos.IngredientDTO;
 import recipes.client.dtos.IngredientWrapper;
 import recipes.client.dtos.Recipe;
 import recipes.client.dtos.RecipeDTO;
+import recipes.client.props.RecipeProps;
 import recipes.client.services.IngredientRestService;
 import recipes.client.services.SessionService;
 
@@ -37,10 +38,15 @@ public class IngredientController {
 	 * аутентифицирован ли пользователь в приложении или нет
 	 * 
 	 * */
-
+	
 	@ModelAttribute("isLoggedIn")
 	public Boolean isLoggedIn() {
 		return sessionService.isLoggedIn();
+	}
+
+	@ModelAttribute("props")
+	public RecipeProps props() {
+		return new RecipeProps();
 	}
 	
 	/*
