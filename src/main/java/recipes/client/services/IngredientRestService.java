@@ -92,7 +92,6 @@ private final SessionService sessionService;
 		return requested;
 	}
 	
-	// !!!
 	public RecipeWrapper getAllIngredientsOfOneRecipe(
 			Recipe recipe, 
 			String filteringValue) throws HttpClientErrorException {
@@ -114,7 +113,6 @@ private final SessionService sessionService;
 		return requested;
 	}
 	
-	// !!!
 	public RecipeWrapper getAllIngredientsOfOneRecipe(
 			Recipe recipe, 
 			Integer curPage, 
