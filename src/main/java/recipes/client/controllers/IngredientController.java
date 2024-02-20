@@ -3,6 +3,7 @@ package recipes.client.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 import recipes.client.dtos.IngredientDTO;
 import recipes.client.dtos.IngredientWrapper;
+import recipes.client.dtos.OnlyUpdateChecks;
 import recipes.client.dtos.Recipe;
 import recipes.client.dtos.RecipeDTO;
 import recipes.client.props.IngredientProps;
@@ -103,7 +105,7 @@ public class IngredientController {
 	
 	@PostMapping
 	public String postIngredient(
-			@Valid IngredientDTO ingredient, 
+			@Valid @ModelAttribute("ingredient") IngredientDTO ingredient, 
 			BindingResult errors, 
 			@ModelAttribute Recipe recipe) {
 		// Здесь получаем из модели атрибут "recipe" 
@@ -154,15 +156,16 @@ public class IngredientController {
 	
 	@PutMapping
 	public String putRecipe(
-			@Valid IngredientDTO ingredient, 
-			BindingResult errors,
+			@Validated(value = OnlyUpdateChecks.class) 
+			@ModelAttribute("ingredient") IngredientDTO ingredient, 
+			BindingResult errors, 
 			Model model) {
 		// Здесь получаем атрибут "recipe", извлекая 
 		// его из модели с помощью метода getAttribute() 
-		Recipe recipe = (Recipe) model.getAttribute("recipe");
-		
 		if (errors.hasErrors()) 
 			return "ingredient-edit";
+		
+		Recipe recipe = (Recipe) model.getAttribute("recipe");
 		
 		IngredientDTO patch = new IngredientDTO(ingredient.getId(), null);
 		

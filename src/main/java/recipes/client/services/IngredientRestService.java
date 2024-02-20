@@ -10,11 +10,13 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
+//import lombok.extern.slf4j.Slf4j;
 import recipes.client.dtos.IngredientWrapper;
 import recipes.client.dtos.Recipe;
 import recipes.client.dtos.RecipeDTO;
 import recipes.client.dtos.RecipeWrapper;
 
+//@Slf4j
 @Service
 @RequiredArgsConstructor
 public class IngredientRestService {
@@ -128,7 +130,13 @@ private final SessionService sessionService;
 	}
 
 	public void deleteIngredient(Long id) throws HttpClientErrorException {
-		restTemplate.delete(urlByIngredientId, id);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", sessionService.getAuthHeader());
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<Void> requestEntity = new HttpEntity<>(httpHeaders);
+		
+		restTemplate.exchange(urlByIngredientId, HttpMethod.DELETE, requestEntity, Void.class, id);
 	}
 
 	public void deleteIngredients(Recipe recipe) throws HttpClientErrorException {

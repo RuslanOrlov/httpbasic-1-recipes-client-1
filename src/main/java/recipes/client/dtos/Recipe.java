@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.groups.Default;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,11 +19,13 @@ public class Recipe {
 	
 	private Long id;
 	
-	@Size(max = 255, message = "Длина наименования не может превышать 255 символов!")
+	@Size(max = 255, message = "Длина наименования не может превышать 255 символов!", 
+			groups = {Default.class, OnlyUpdateChecks.class})
 	@NotBlank(message = "Название рецепта не может быть пустым!")
 	private String name;
 	
-	@Size(max = 255, message = "Длина описания не может превышать 255 символов!")
+	@Size(max = 255, message = "Длина описания не может превышать 255 символов!", 
+			groups = {Default.class, OnlyUpdateChecks.class})
 	private String description;
 	
 	@Builder.Default

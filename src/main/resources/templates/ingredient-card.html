@@ -24,20 +24,36 @@
 		
 		<div class="areaForData" id="dataArea">
 			<h2>Карточка ингредиента</h2>
-			<table border="2" cellpadding="5">
-				<tr>
-					<th align="right">Id</th>
-					<td th:text="${ingredient.getId()}">
-				</tr>
-				<tr>
-					<th align="right">Название</th>
-					<td th:text="${ingredient.getName()}">
-				</tr>
-				<tr>
-					<td align="right" colspan="2"> 
-						<a th:href="@{/ingredients}">Вернуться</a> </td>
-				</tr>
-			</table>
+			
+			<form th:object="${recipe}">
+				<p style="font-size: 110%"><b>Текущий рецепт</b></p>
+				
+				<label for="id">Id:</label>
+				<input style="margin-right: 10px;" size="10" 
+						class="readonlyField" readonly type="text" th:field="*{id}">
+				
+				<label for="name">Название:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{name}">
+				<br><br>
+			</form>
+			
+			<hr> <!-- Разделительная линия -->
+			
+			<form th:object="${ingredient}">
+				<p style="font-size: 110%"><b>Текущий ингредиент</b></p>
+				
+				<label for="id">Id:</label>
+				<input style="margin-right: 10px;" size="10" 
+						class="readonlyField" readonly type="text" th:field="*{id}">
+				
+				<label for="name">Название:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{name}">
+				<br><br>
+			</form>
+			
+			<form th:method="get" th:action="@{/ingredients}">
+				<button>Вернуться</button>
+			</form>
 		</div>
 		
 		<div class="block" id="serviceArea">

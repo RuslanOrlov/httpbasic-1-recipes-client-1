@@ -24,27 +24,28 @@
 		
 		<div class="areaForData" id="dataArea">
 			<h2>Карточка рецепта</h2>
-			<table border="2" cellpadding="5">
-				<tr>
-					<th align="right">Id</th>
-					<td th:text="${recipe.getId()}">
-				</tr>
-				<tr>
-					<th align="right">Название</th>
-					<td th:text="${recipe.getName()}">
-				</tr>
-				<tr>
-					<th align="right">Описание</th>
-					<td>
-						<textarea disabled rows="4" cols="50" 
-									th:text="${recipe.getDescription()}"></textarea>
-					</td>
-				</tr>
-				<tr>
-					<td align="right" colspan="2"> 
-						<a th:href="@{/recipes}">Вернуться</a> </td>
-				</tr>
-			</table>
+			
+			<form th:object="${recipe}">
+				<p style="font-size: 110%"><b>Текущий рецепт</b></p>
+				
+				<label for="id">Id......................:</label>
+				<input style="margin-right: 10px;" size="10" 
+						class="readonlyField" readonly type="text" th:field="*{id}">
+				<br><br>
+				
+				<label for="name">Название.........:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{name}">
+				<br><br>
+				
+				<label for="description" style="vertical-align: top;">Описание........:</label>
+				<textarea class="readonlyField" disabled 
+							rows="4" cols="50" th:field="*{description}"></textarea>
+				<br><br>
+			</form>
+			
+			<form th:method="get" th:action="@{/recipes}">
+				<button>Вернуться</button>
+			</form>
 		</div>
 		
 		<div class="block" id="serviceArea">

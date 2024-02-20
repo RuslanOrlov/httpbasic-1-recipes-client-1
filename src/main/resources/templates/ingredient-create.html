@@ -25,9 +25,24 @@
 		<div class="areaForData" id="dataArea">
 			<h2>Создание нового ингредиента</h2>
 			
-			<form th:method="post" th:action="@{/ingredients}" th:object="${ingredient}">
+			<form th:object="${recipe}">
+				<p style="font-size: 110%"><b>Текущий рецепт</b></p>
 				
-				<label for="name">Название.........:</label>
+				<label for="id">Id:</label>
+				<input style="margin-right: 10px;" size="10" 
+						class="readonlyField" readonly type="text" th:field="*{id}">
+				
+				<label for="name">Название:</label>
+				<input class="readonlyField" readonly type="text" th:field="*{name}">
+				<br><br>
+			</form>
+			
+			<hr> <!-- Разделительная линия -->
+			
+			<form th:method="post" th:action="@{/ingredients}" th:object="${ingredient}">
+				<p style="font-size: 110%"><b>Новый ингредиент</b></p>
+				
+				<label for="name">Название:</label>
 				<input type="text" th:field="*{name}">
 				<div style="color:red" 
 					th:if="${#fields.hasErrors('name')}"
