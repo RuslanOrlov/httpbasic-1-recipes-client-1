@@ -3,6 +3,7 @@ package recipes.client.services;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,19 +32,23 @@ private final SessionService sessionService;
 	
 //	private String urlWithSort 				= "http://localhost:8080/api/v1/ingredients"
 //												+ "?recipeId={id}&sort={field}";
-//	private String urlWithSortAndPage 		= "http://localhost:8080/api/v1/ingredients"
-//												+ "?recipeId={id}&sort={field}&page={page}&size={size}";
+	private String urlWithSortAndPage 		= "http://localhost:8080/api/v1/ingredients"
+												+ "?recipeId={id}&sort={field}&page={page}&size={size}";
 	
 	private String urlForGetIngredient		= "http://localhost:8080/api/v1/ingredients"
 												+ "?recipeId={recipeId}"
 												+ "&ingredientId={ingredientId}";
 	private String urlByIngredientId		= "http://localhost:8080/api/v1/ingredients/{id}";
 	
-//	private String urlCount 			= "http://localhost:8080/api/v1/ingredients/count";
-//	private String urlCountByQuery 		= "http://localhost:8080/api/v1/ingredients/count?value={value}";
-//	private String urlQuery 			= "http://localhost:8080/api/v1/ingredients?value={value}";
-//	private String urlPagingQuery 		= "http://localhost:8080/api/v1/ingredients?value={value}"
-//											+ "&offset={offset}&limit={limit}";
+	private String urlCount 			= "http://localhost:8080/api/v1/ingredients/count"
+												+ "?recipeId={id}";
+	private String urlCountByQuery 		= "http://localhost:8080/api/v1/ingredients/count"
+												+ "?recipeId={id}&value={value}";
+	private String urlQuery 			= "http://localhost:8080/api/v1/ingredients"
+												+ "?recipeId={id}&value={value}";
+	private String urlPagingQuery 		= "http://localhost:8080/api/v1/ingredients"
+												+ "?recipeId={id}&value={value}"
+												+ "&offset={offset}&limit={limit}";
 	
 	public RecipeWrapper getAllIngredientsOfOneRecipe(
 			Recipe recipe) throws HttpClientErrorException {
@@ -64,7 +69,102 @@ private final SessionService sessionService;
 		}
 		return requested;
 	}
-
+	
+	public RecipeWrapper getAllIngredientsOfOneRecipe(
+			Recipe recipe, 
+			Integer curPage, 
+			Integer pageSize) throws HttpClientErrorException {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", sessionService.getAuthHeader());
+		httpHeaders.add("Accept", "application/json");
+		
+		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
+		
+		ResponseEntity<RecipeWrapper> response = 
+				this.restTemplate.exchange(
+						this.urlWithSortAndPage, HttpMethod.GET, 
+						requestEntity, RecipeWrapper.class, recipe.getId(), "id", curPage, pageSize);
+		
+		RecipeWrapper requested = null;
+		if (response.getStatusCode().is2xxSuccessful()) {
+			requested = response.getBody();
+		}
+		return requested;
+	}
+	
+	// !!!
+	public RecipeWrapper getAllIngredientsOfOneRecipe(
+			Recipe recipe, 
+			String filteringValue) throws HttpClientErrorException {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", sessionService.getAuthHeader());
+		httpHeaders.add("Accept", "application/json");
+		
+		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
+		
+		ResponseEntity<RecipeWrapper> response = 
+				this.restTemplate.exchange(
+						this.urlQuery, HttpMethod.GET, 
+						requestEntity, RecipeWrapper.class, recipe.getId(), filteringValue);
+		
+		RecipeWrapper requested = null;
+		if (response.getStatusCode().is2xxSuccessful()) {
+			requested = response.getBody();
+		}
+		return requested;
+	}
+	
+	// !!!
+	public RecipeWrapper getAllIngredientsOfOneRecipe(
+			Recipe recipe, 
+			Integer curPage, 
+			Integer pageSize, 
+			String filteringValue) throws HttpClientErrorException {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", sessionService.getAuthHeader());
+		httpHeaders.add("Accept", "application/json");
+		
+		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
+		
+		ResponseEntity<RecipeWrapper> response = 
+				this.restTemplate.exchange(
+						this.urlPagingQuery, HttpMethod.GET, 
+						requestEntity, RecipeWrapper.class, 
+						recipe.getId(), filteringValue, curPage*pageSize, pageSize);
+		
+		RecipeWrapper requested = null;
+		if (response.getStatusCode().is2xxSuccessful()) {
+			requested = response.getBody();
+		}
+		return requested;
+	}
+	
+	public Integer countAll(
+			Recipe recipe, Boolean isFiltering, String value) 
+					throws HttpClientErrorException {
+		ResponseEntity<Integer> response = 
+				ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		
+		HttpHeaders httpHeaders = new HttpHeaders();
+		
+		httpHeaders.add("Authorization", sessionService.getAuthHeader());
+		
+		HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
+		
+		if (isFiltering)
+			response = this.restTemplate.exchange(
+									this.urlCountByQuery, HttpMethod.GET, 
+										requestEntity, Integer.class, recipe.getId(), value);
+		else
+			response = this.restTemplate.exchange(
+									this.urlCount, HttpMethod.GET, 
+										requestEntity, Integer.class, recipe.getId());
+		
+		if (response.getStatusCode().is2xxSuccessful())
+			return response.getBody();
+		return 0;
+	}
+	
 	public IngredientWrapper getOneIngredientOfOneRecipe(
 			Recipe recipe, Long ingredientId) throws HttpClientErrorException {
 		Long recipeId = recipe.getId();
@@ -154,4 +254,5 @@ private final SessionService sessionService;
 		
 		restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Void.class);
 	}
+	
 }

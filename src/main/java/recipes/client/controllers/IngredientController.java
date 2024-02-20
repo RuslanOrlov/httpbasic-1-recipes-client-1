@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -21,6 +22,7 @@ import recipes.client.dtos.IngredientWrapper;
 import recipes.client.dtos.OnlyUpdateChecks;
 import recipes.client.dtos.Recipe;
 import recipes.client.dtos.RecipeDTO;
+import recipes.client.dtos.RecipeWrapper;
 import recipes.client.props.IngredientProps;
 import recipes.client.services.IngredientRestService;
 import recipes.client.services.SessionService;
@@ -34,6 +36,7 @@ public class IngredientController {
 	
 	private final IngredientRestService ingredientService;
 	private final SessionService sessionService;
+	private final IngredientProps props;
 	
 	/*
 	 * Ниже представлен метод, возвращающий признак того, 
@@ -45,10 +48,111 @@ public class IngredientController {
 	public Boolean isLoggedIn() {
 		return sessionService.isLoggedIn();
 	}
+	
+	/*
+	 * Ниже представлены методы управления постраничным просмотром данных
+	 * 
+	 * */
+	
+	@GetMapping("/paging")
+	public String swithPaging() {
+		if (props.getIsPaging())
+			props.setIsPaging(false);
+		else 
+			props.setIsPaging(true);
+		
+		return "redirect:/ingredients";
+	}
+	
+	@GetMapping("/first")
+	public String firstPage() {
+		props.setCurPage(0);
+		return "redirect:/ingredients";
+	}
+	
+	@GetMapping("/prev")
+	public String prevPage() {
+		if (props.getCurPage() > 0) {
+			props.setCurPage(props.getCurPage() - 1);
+		}
+		return "redirect:/ingredients";
+	}
+	
+	@GetMapping("/next")
+	public String nextPage(@ModelAttribute Recipe recipe) {
+		Integer countIngredients = 0;
+		try {
+			countIngredients = ingredientService.countAll(
+					recipe, props.getIsFiltering(), props.getFilteringValue());
+		} catch (HttpClientErrorException ex) {
+			int statusCode = ex.getStatusCode().value();
+			String body = ex.getResponseBodyAsString();			
+			return "redirect:/error?statusCode=" + statusCode + "&body=" + body;
+		}
+		
+		if (props.getCurPage() < props.getTotalPages(countIngredients))
+			props.setCurPage(props.getCurPage() + 1);
+		
+		return "redirect:/ingredients";
+	}
 
-	@ModelAttribute("props")
-	public IngredientProps props() {
-		return new IngredientProps();
+	@GetMapping("/last")
+	public String lastPage(@ModelAttribute Recipe recipe) {
+		Integer countIngredients = 0;
+		try {
+			countIngredients = ingredientService.countAll(
+					recipe, props.getIsFiltering(), props.getFilteringValue());
+		} catch (HttpClientErrorException ex) {
+			int statusCode = ex.getStatusCode().value();
+			String body = ex.getResponseBodyAsString();			
+			return "redirect:/error?statusCode=" + statusCode + "&body=" + body;
+		}
+		
+		props.setCurPage(props.getTotalPages(countIngredients));
+		
+		return "redirect:/ingredients";
+	}
+	
+	@PostMapping("/change-page-size")
+	public String changePageSize(@ModelAttribute("props") IngredientProps update) {
+		if (update.getPageSize() <= 0)
+			update.setPageSize(1);
+		props.setPageSize(update.getPageSize());
+		return "redirect:/ingredients";
+	}
+
+	/*
+	 * Ниже представлены методы управления фильтром просмотра данных
+	 * 
+	 * */
+	
+	@GetMapping("/filter")
+	public String switchFilter(@ModelAttribute Recipe recipe) {
+		props.setIsFiltering(!props.getIsFiltering());
+		
+		Integer countIngredients = 0;
+		try {
+			countIngredients = ingredientService.countAll(
+					recipe, props.getIsFiltering(), props.getFilteringValue());
+		} catch (HttpClientErrorException ex) {
+			int statusCode = ex.getStatusCode().value();
+			String body = ex.getResponseBodyAsString();			
+			return "redirect:/error?statusCode=" + statusCode + "&body=" + body;
+		}
+			
+		Integer totalPages = props.getTotalPages(countIngredients);
+		if (props.getCurPage() > totalPages) 
+			props.setCurPage(totalPages);
+		
+		return "redirect:/ingredients";
+	}
+	
+	@GetMapping(value = "/query", params = "value")
+	public String runFilteringQuery(@RequestParam("value") String value, Model model) {
+		props.setFilteringValueUI(value);
+		props.setFilteringValue("%" + value + "%");
+		props.setCurPage(0);
+		return "redirect:/ingredients";
 	}
 	
 	/*
@@ -57,11 +161,15 @@ public class IngredientController {
 	 * */
 	
 	@GetMapping
-	public String getAllIngredientsOfOneRecipe(Model model, @ModelAttribute Recipe recipe) {
+	public String getAllIngredientsOfOneRecipe(
+			Model model, 
+			@ModelAttribute Recipe recipe) {
 		// Здесь получаем из модели атрибут "recipe" 
 		// путем внедрения его как параметр метода
+		
 		try {
 			Recipe requested = formIngredientsList(recipe);
+			model.addAttribute("props", props);
 			model.addAttribute("recipe", requested);
 			model.addAttribute("ingredients", requested.getIngredients());
 		} catch (HttpClientErrorException ex) {
@@ -75,7 +183,33 @@ public class IngredientController {
 	
 	private Recipe formIngredientsList(Recipe recipe) 
 			throws HttpClientErrorException {
-		return ingredientService.getAllIngredientsOfOneRecipe(recipe).createRecipe();
+		
+		RecipeWrapper wrapper = null;
+		
+		if (!props.getIsPaging() && !props.getIsFiltering()) {
+			wrapper = ingredientService.getAllIngredientsOfOneRecipe(
+						recipe);
+		}
+		else if (props.getIsPaging() && !props.getIsFiltering()) {
+			wrapper = ingredientService.getAllIngredientsOfOneRecipe(
+						recipe, 
+						props.getCurPage(), 
+						props.getPageSize());
+		}
+		else if (!props.getIsPaging() && props.getIsFiltering()) {
+			wrapper = ingredientService.getAllIngredientsOfOneRecipe(
+						recipe, 
+						props.getFilteringValue());
+		}
+		else if (props.getIsPaging() && props.getIsFiltering()) {
+			wrapper = ingredientService.getAllIngredientsOfOneRecipe(
+						recipe, 
+						props.getCurPage(), 
+						props.getPageSize(), 
+						props.getFilteringValue());
+		}
+		
+		return wrapper.createRecipe();
 	}
 	
 	@GetMapping("/{id}")
