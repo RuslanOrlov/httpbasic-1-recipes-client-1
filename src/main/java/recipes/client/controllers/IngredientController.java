@@ -1,5 +1,9 @@
 package recipes.client.controllers;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.lowagie.text.DocumentException;
+
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
@@ -26,6 +33,8 @@ import recipes.client.dtos.RecipeWrapper;
 import recipes.client.props.IngredientProps;
 import recipes.client.services.IngredientRestService;
 import recipes.client.services.SessionService;
+import recipes.client.tools.PDFGenerator;
+import recipes.client.tools.ReportType;
 
 //@Slf4j
 @Controller
@@ -153,6 +162,25 @@ public class IngredientController {
 		props.setFilteringValue("%" + value + "%");
 		props.setCurPage(0);
 		return "redirect:/ingredients";
+	}
+	
+	/*
+	 * Ниже представлен метод экспорта данных о заметках во внешний PDF файл
+	 * 
+	 * */
+	
+	@GetMapping("/export-to-pdf") 
+	public void exportToPDF(
+			HttpServletResponse response, 
+			@ModelAttribute Recipe recipe) throws IOException, DocumentException {
+		response.setContentType("application/pdf");
+		 
+		String headerName = "Content-Disposition"; 
+		String headerValue = "attachment; filename=pdf_" + LocalDateTime.now().toString() + ".pdf";
+		response.setHeader(headerName, headerValue);
+		
+		PDFGenerator generator = new PDFGenerator();
+		generator.generate(response, Arrays.asList(recipe), ReportType.CARD_TYPE); 
 	}
 	
 	/*

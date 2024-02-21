@@ -1,5 +1,7 @@
 package recipes.client.controllers;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,10 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.lowagie.text.DocumentException;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 //import com.itextpdf.text.DocumentException;
 
 import jakarta.validation.Valid;
@@ -28,6 +34,8 @@ import recipes.client.dtos.Recipe;
 import recipes.client.props.RecipeProps;
 import recipes.client.services.RecipeRestService;
 import recipes.client.services.SessionService;
+import recipes.client.tools.PDFGenerator;
+import recipes.client.tools.ReportType;
 
 //@Slf4j
 @Controller
@@ -164,18 +172,17 @@ public class RecipeController {
 	 * 
 	 * */
 	
-	/*
-	 * @GetMapping("/export-to-pdf") public void exportToPDF(HttpServletResponse
-	 * response) throws IOException, DocumentException {
-	 * response.setContentType("application/pdf");
-	 * 
-	 * String headerName = "Content-Disposition"; String headerValue =
-	 * "attachment; filename=pdf_" + LocalDateTime.now().toString() + ".pdf";
-	 * response.setHeader(headerName, headerValue);
-	 * 
-	 * PDFGenerator generator = new PDFGenerator(); generator.generate(response,
-	 * formRecipesList()); }
-	 */
+	@GetMapping("/export-to-pdf") 
+	public void exportToPDF(HttpServletResponse response) throws IOException, DocumentException {
+		response.setContentType("application/pdf");
+		 
+		String headerName = "Content-Disposition"; 
+		String headerValue = "attachment; filename=pdf_" + LocalDateTime.now().toString() + ".pdf";
+		response.setHeader(headerName, headerValue);
+		
+		PDFGenerator generator = new PDFGenerator();
+		generator.generate(response, formRecipesList(), ReportType.LIST_TYPE); 
+	}
 	
 	/*
 	 * Ниже представлены методы работы с данными (CRUD) посредством REST сервиса
