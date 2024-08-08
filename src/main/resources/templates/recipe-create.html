@@ -25,7 +25,8 @@
 		<div class="areaForData" id="dataArea">
 			<h2>Создание нового рецепта</h2>
 			
-			<form th:method="post" th:action="@{/recipes}" th:object="${recipe}">
+																				<!-- Поддержка изображений -->
+			<form th:method="post" th:action="@{/recipes}" th:object="${recipe}" enctype="multipart/form-data">
 				
 				<label for="name">Название.........:</label>
 				<input type="text" th:field="*{name}">
@@ -39,6 +40,11 @@
 				<div style="color:red" 
 					th:if="${#fields.hasErrors('description')}"
 					th:errors="*{description}">Error text</div>
+				<br><br>
+				
+				<!-- Поддержка изображений -->
+				<label for="image">Изображение..:</label>
+				<input type="file" id="image" name="image">
 				<br><br>
 				
 				<button>Создать рецепт</button>

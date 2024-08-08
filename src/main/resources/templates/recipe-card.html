@@ -41,6 +41,11 @@
 				<textarea class="readonlyField" disabled 
 							rows="4" cols="50" th:field="*{description}"></textarea>
 				<br><br>
+				
+				<!-- Поддержка изображений -->
+				<img th:src="@{*{imageUrl}}" alt="Recipe Image">
+				<br><br>
+				
 			</form>
 			
 			<form th:method="get" th:action="@{/recipes}">

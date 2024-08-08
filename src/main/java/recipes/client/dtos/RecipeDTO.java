@@ -15,4 +15,9 @@ public class RecipeDTO {
 	private String name;
 	private String description;
 	
+	// Поддержка изображений
+	private byte[] image;
+	// Поддержка изображений
+	private String imageUrl;
+	
 }

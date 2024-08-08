@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.lowagie.text.DocumentException;
 
@@ -29,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import recipes.client.dtos.OnlyUpdateChecks;
-//import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import recipes.client.dtos.Recipe;
 import recipes.client.props.RecipeProps;
 import recipes.client.services.RecipeRestService;
@@ -37,7 +38,7 @@ import recipes.client.services.SessionService;
 import recipes.client.tools.PDFGenerator;
 import recipes.client.tools.ReportType;
 
-//@Slf4j
+@Slf4j
 @Controller
 @RequestMapping("/recipes")
 @SessionAttributes("recipe")
@@ -249,10 +250,24 @@ public class RecipeController {
 	@PostMapping
 	public String postRecipe(
 			@Valid Recipe recipe, 
-			BindingResult errors) {
+			BindingResult errors, 
+			// Поддержка изображения
+			@RequestParam(value = "image", required = false) MultipartFile image/**/) throws IOException {
 		
-		if (errors.hasErrors()) 
-			return "recipe-create";
+		log.info("111");
+		//log.info(image.getName() + " - " + image.getContentType() + " {}", image);
+		
+		//if (errors.hasErrors()) { 
+		//	log.info("111-1");
+		//	return "recipe-create"; 
+		//}
+
+		log.info("222");
+		
+		// Поддержка изображения
+		recipe.setImage(image.getBytes());
+		
+		log.info("333");
 		
 		try {
 			recipeService.postRecipe(recipe);

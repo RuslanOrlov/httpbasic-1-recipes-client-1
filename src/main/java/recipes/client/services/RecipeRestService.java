@@ -15,12 +15,12 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import recipes.client.dtos.Recipe;
 import recipes.client.dtos.RecipeDTO;
 import recipes.client.dtos.RecipeWrapper;
 
-//@Slf4j
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecipeRestService {
@@ -187,6 +187,9 @@ public class RecipeRestService {
 	}
 	
 	public Recipe postRecipe(Recipe recipe) throws HttpClientErrorException {
+		
+		log.info("444");
+		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		

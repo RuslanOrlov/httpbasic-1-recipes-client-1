@@ -21,6 +21,12 @@ public class RecipeWrapper {
 				.id(recipe.getId())
 				.name(recipe.getName())
 				.description(recipe.getDescription())
+				
+				// Поддержка изображений
+				.image(recipe.getImage())
+				// Поддержка изображений
+				.imageUrl(recipe.getImageUrl())
+				
 				.ingredients(ingredients)
 				.build();
 	}

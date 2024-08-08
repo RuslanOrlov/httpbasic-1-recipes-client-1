@@ -28,6 +28,14 @@ public class Recipe {
 			groups = {Default.class, OnlyUpdateChecks.class})
 	private String description;
 	
+	
+	// Поддержка изображений
+	@Builder.Default
+	private byte[] image = null;
+	// Поддержка изображений
+	private String imageUrl;
+	
+	
 	@Builder.Default
 	private List<IngredientDTO> ingredients = new ArrayList<>();
 	
@@ -49,6 +57,10 @@ public class Recipe {
 				.id(id)
 				.name(name)
 				.description(description)
+				
+				// Поддержка изображений
+				.image(image)
+				
 				.build();
 	}
 	
