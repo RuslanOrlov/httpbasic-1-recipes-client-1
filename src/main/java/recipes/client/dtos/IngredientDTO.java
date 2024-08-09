@@ -17,7 +17,7 @@ public class IngredientDTO {
 	private Long id;
 	
 	@Size(max = 255, message = "Длина наименования не может превышать 255 символов!", 
-			groups = {Default.class, OnlyUpdateChecks.class})
+			groups = {Default.class, OnlyBasicPropertiesChecks.class})
 	@NotBlank(message = "Название ингредиента не может быть пустым!")
 	private String name;
 	

@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 import recipes.client.dtos.IngredientDTO;
 import recipes.client.dtos.IngredientWrapper;
-import recipes.client.dtos.OnlyUpdateChecks;
+import recipes.client.dtos.OnlyBasicPropertiesChecks;
 import recipes.client.dtos.Recipe;
 import recipes.client.dtos.RecipeDTO;
 import recipes.client.dtos.RecipeWrapper;
@@ -318,7 +318,7 @@ public class IngredientController {
 	
 	@PutMapping
 	public String putRecipe(
-			@Validated(value = OnlyUpdateChecks.class) 
+			@Validated(value = OnlyBasicPropertiesChecks.class) 
 			@ModelAttribute("ingredient") IngredientDTO ingredient, 
 			BindingResult errors, 
 			Model model) {

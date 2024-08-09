@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,9 +28,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 //import com.itextpdf.text.DocumentException;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import recipes.client.dtos.OnlyUpdateChecks;
+import recipes.client.dtos.OnlyBasicPropertiesChecks;
 import lombok.extern.slf4j.Slf4j;
 import recipes.client.dtos.Recipe;
 import recipes.client.props.RecipeProps;
@@ -249,7 +249,7 @@ public class RecipeController {
 	
 	@PostMapping
 	public String postRecipe(
-			@Valid Recipe recipe, 
+			@Validated(value = OnlyBasicPropertiesChecks.class) Recipe recipe, 
 			BindingResult errors, 
 			// Поддержка изображения
 			@RequestParam(value = "image", required = false) MultipartFile image/**/) throws IOException {
@@ -257,10 +257,16 @@ public class RecipeController {
 		log.info("111");
 		//log.info(image.getName() + " - " + image.getContentType() + " {}", image);
 		
-		//if (errors.hasErrors()) { 
-		//	log.info("111-1");
-		//	return "recipe-create"; 
-		//}
+		if (errors.hasErrors()) { 
+			log.info("111-1");
+			
+			log.info("Ошибки валидации:");
+		    for (FieldError error : errors.getFieldErrors()) {
+		        log.info(error.getField() + ": " + error.getDefaultMessage());
+		    }
+			
+			return "recipe-create"; 
+		}
 
 		log.info("222");
 		
@@ -300,7 +306,7 @@ public class RecipeController {
 	
 	@PutMapping
 	public String putRecipe(
-			@Validated(value = OnlyUpdateChecks.class) Recipe recipe, 
+			@Validated(value = OnlyBasicPropertiesChecks.class) Recipe recipe, 
 			BindingResult errors) {
 		
 		if (errors.hasErrors()) 
