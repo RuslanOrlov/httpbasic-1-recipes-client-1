@@ -30,8 +30,7 @@ public class Recipe {
 	
 	
 	// Поддержка изображений
-	@Builder.Default
-	private byte[] image = null;
+	private byte[] image;
 	// Поддержка изображений
 	private String imageUrl;
 	

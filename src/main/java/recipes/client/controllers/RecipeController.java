@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.lowagie.text.DocumentException;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 //import com.itextpdf.text.DocumentException;
 
@@ -249,31 +250,21 @@ public class RecipeController {
 	
 	@PostMapping
 	public String postRecipe(
-			@Validated(value = OnlyBasicPropertiesChecks.class) Recipe recipe, 
+			@Valid Recipe recipe, 
 			BindingResult errors, 
 			// Поддержка изображения
-			@RequestParam(value = "image", required = false) MultipartFile image/**/) throws IOException {
-		
-		log.info("111");
-		//log.info(image.getName() + " - " + image.getContentType() + " {}", image);
+			@RequestParam(required = false) MultipartFile recipeImage) throws IOException {
 		
 		if (errors.hasErrors()) { 
-			log.info("111-1");
-			
 			log.info("Ошибки валидации:");
 		    for (FieldError error : errors.getFieldErrors()) {
 		        log.info(error.getField() + ": " + error.getDefaultMessage());
 		    }
-			
 			return "recipe-create"; 
 		}
 
-		log.info("222");
-		
 		// Поддержка изображения
-		recipe.setImage(image.getBytes());
-		
-		log.info("333");
+		recipe.setImage(recipeImage.getBytes());
 		
 		try {
 			recipeService.postRecipe(recipe);

@@ -187,9 +187,6 @@ public class RecipeRestService {
 	}
 	
 	public Recipe postRecipe(Recipe recipe) throws HttpClientErrorException {
-		
-		log.info("444");
-		
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		
