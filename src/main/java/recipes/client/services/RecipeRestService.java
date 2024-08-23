@@ -186,6 +186,22 @@ public class RecipeRestService {
 		return null;
 	}
 	
+	/* Поддержка изображений */
+	public ResponseEntity<byte[]> getRecipeImage(String imageUrl) {
+
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.add("Authorization", sessionService.getAuthHeader());
+		
+		ResponseEntity<byte[]> response = 
+				this.restTemplate.exchange(imageUrl, HttpMethod.GET, 
+						new HttpEntity<>(httpHeaders), byte[].class);
+		
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return response;
+		}
+		return null;
+	}
+	
 	public Recipe postRecipe(Recipe recipe, byte[] image) throws HttpClientErrorException {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
