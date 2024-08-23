@@ -252,8 +252,8 @@ public class RecipeController {
 	public String postRecipe(
 			@Valid Recipe recipe, 
 			BindingResult errors, 
-			// Поддержка изображения
-			@RequestParam(required = false) MultipartFile recipeImage) throws IOException {
+			@RequestParam(required = false) MultipartFile recipeImage 	/* Поддержка изображений */
+			) throws IOException {
 		
 		if (errors.hasErrors()) { 
 			log.info("Ошибки валидации:");
@@ -262,12 +262,11 @@ public class RecipeController {
 		    }
 			return "recipe-create"; 
 		}
-
-		// Поддержка изображения
-		recipe.setImage(recipeImage.getBytes());
+		
+		/*recipe.setImage(recipeImage.getBytes());*/					/* Поддержка изображений */
 		
 		try {
-			recipeService.postRecipe(recipe);
+			recipeService.postRecipe(recipe, recipeImage.getBytes()); 	/* Поддержка изображений */
 		} catch (HttpClientErrorException ex) {
 			int statusCode = ex.getStatusCode().value();
 			String body = ex.getResponseBodyAsString();			
@@ -298,7 +297,9 @@ public class RecipeController {
 	@PutMapping
 	public String putRecipe(
 			@Validated(value = OnlyBasicPropertiesChecks.class) Recipe recipe, 
-			BindingResult errors) {
+			BindingResult errors,
+			@RequestParam(required = false) MultipartFile recipeImage 	/* Поддержка изображений */
+			) throws IOException {
 		
 		if (errors.hasErrors()) 
 			return "recipe-edit";
@@ -311,7 +312,8 @@ public class RecipeController {
 			patch.setDescription(recipe.getDescription().trim());
 		
 		try {
-			recipeService.putRecipe(patch, recipe.getId());
+			recipeService.putRecipe(patch, recipe.getId(), 				/* Поддержка изображений */
+									recipeImage.getBytes().length != 0? recipeImage.getBytes() : null);
 		} catch (HttpClientErrorException ex) {
 			int statusCode = ex.getStatusCode().value();
 			String body = ex.getResponseBodyAsString();			

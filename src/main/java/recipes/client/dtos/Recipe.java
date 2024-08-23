@@ -28,12 +28,8 @@ public class Recipe {
 			groups = {Default.class, OnlyBasicPropertiesChecks.class})
 	private String description;
 	
-	
-	// Поддержка изображений
-	private byte[] image;
-	// Поддержка изображений
-	private String imageUrl;
-	
+	/*private byte[] image;*/ 	/* Поддержка изображений */
+	private String imageUrl; 	/* Поддержка изображений */
 	
 	@Builder.Default
 	private List<IngredientDTO> ingredients = new ArrayList<>();
@@ -44,22 +40,19 @@ public class Recipe {
 		this.description = description;
 	}
 	
-	public RecipeWrapper createRecipeWrapper() {
+	public RecipeWrapper createRecipeWrapper(byte[] image) {
 		return RecipeWrapper.builder()
-				.recipe(createRecipeDTO())
+				.recipe(createRecipeDTO(image))
 				.ingredients(ingredients)
 				.build();
 	}
 	
-	public RecipeDTO createRecipeDTO() {
+	public RecipeDTO createRecipeDTO(byte[] image) {
 		return RecipeDTO.builder()
 				.id(id)
 				.name(name)
 				.description(description)
-				
-				// Поддержка изображений
-				.image(image)
-				
+				.image(image) /* Поддержка изображений */
 				.build();
 	}
 	

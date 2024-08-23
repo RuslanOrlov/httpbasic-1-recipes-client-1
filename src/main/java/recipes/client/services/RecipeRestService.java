@@ -186,14 +186,14 @@ public class RecipeRestService {
 		return null;
 	}
 	
-	public Recipe postRecipe(Recipe recipe) throws HttpClientErrorException {
+	public Recipe postRecipe(Recipe recipe, byte[] image) throws HttpClientErrorException {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		
 		httpHeaders.add("Authorization", sessionService.getAuthHeader());
 				
 		HttpEntity<RecipeWrapper> requestEntity = 
-				new HttpEntity<RecipeWrapper>(recipe.createRecipeWrapper(), httpHeaders);
+				new HttpEntity<RecipeWrapper>(recipe.createRecipeWrapper(image), httpHeaders);
 		
 		ResponseEntity<RecipeWrapper> response = 
 				this.restTemplate.postForEntity(this.url, requestEntity, 
@@ -205,14 +205,14 @@ public class RecipeRestService {
 		return null;
 	}
 	
-	public Recipe putRecipe(Recipe patch, Long id) throws HttpClientErrorException {
+	public Recipe putRecipe(Recipe patch, Long id, byte[] image) throws HttpClientErrorException {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 		
 		httpHeaders.add("Authorization", sessionService.getAuthHeader());
 		
 		HttpEntity<RecipeDTO> requestEntity = 
-				new HttpEntity<RecipeDTO>(patch.createRecipeDTO(), httpHeaders);
+				new HttpEntity<RecipeDTO>(patch.createRecipeDTO(image), httpHeaders);
 		
 		ResponseEntity<RecipeWrapper> response = 
 				this.restTemplate.exchange(this.urlById, HttpMethod.PUT, 
@@ -233,6 +233,6 @@ public class RecipeRestService {
 		
 		this.restTemplate.exchange(this.urlById, HttpMethod.DELETE, 
 										requestEntity, Void.class, id);
-	} // Закончил, протестировать !!! 
+	}
 	
 }

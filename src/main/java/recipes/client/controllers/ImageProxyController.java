@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.client.RestTemplate;
 
 import lombok.RequiredArgsConstructor;
+//import lombok.extern.slf4j.Slf4j;
 import recipes.client.services.SessionService;
 
 @Controller
 @RequiredArgsConstructor
+//@Slf4j
 public class ImageProxyController {
 	
 	private final SessionService sessionService;
