@@ -40,6 +40,13 @@ public class Recipe {
 		this.description = description;
 	}
 	
+	public Recipe(Long id, String name, String description, String imageUrl) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.imageUrl = imageUrl;
+	}
+	
 	public RecipeWrapper createRecipeWrapper(byte[] image) {
 		return RecipeWrapper.builder()
 				.recipe(createRecipeDTO(image))

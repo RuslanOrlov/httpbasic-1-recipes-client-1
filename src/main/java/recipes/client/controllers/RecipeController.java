@@ -289,7 +289,7 @@ public class RecipeController {
 		
 		model.addAttribute("oldName", recipe.getName());
 		model.addAttribute("oldDescription", recipe.getDescription());
-		model.addAttribute("recipe", new Recipe(recipe.getId(), null, null));
+		model.addAttribute("recipe", new Recipe(recipe.getId(), null, null, recipe.getImageUrl()));
 		
 		return "recipe-edit";
 	}
