@@ -52,10 +52,16 @@
 				<button>Вернуться</button>
 			</form>
 			
+			<br>
+			
 			<!-- Поддержка изображений -->
-			<form th:method="get" th:action="@{/recipes/{id}/download(id=*{id})}">
-				<button>Скачать изображение</button>
+			<form th:switch="${recipe.getImageUrl() == null}" 
+					th:method="get" 
+					th:action="@{/recipes/{id}/download(id=*{id})}">
+				<button th:case="true" disabled>Скачать изображение</button>
+				<button th:case="false">Скачать изображение</button>
 			</form>
+			
 		</div>
 		
 		<div class="block" id="serviceArea">

@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -192,14 +193,15 @@ public class RecipeRestService {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", sessionService.getAuthHeader());
 		
-		ResponseEntity<byte[]> response = 
-				this.restTemplate.exchange(imageUrl, HttpMethod.GET, 
-						new HttpEntity<>(httpHeaders), byte[].class);
+		ResponseEntity<byte[]> response = new ResponseEntity<byte[]>(HttpStatusCode.valueOf(404));
 		
-		if (response.getStatusCode().is2xxSuccessful()) {
-			return response;
+		if (imageUrl != null) {
+			response = this.restTemplate.exchange(imageUrl, HttpMethod.GET, 
+					new HttpEntity<>(httpHeaders), byte[].class);
+			if (response.getStatusCode().is2xxSuccessful())
+				return response;
 		}
-		return null;
+		return response;
 	}
 	
 	public Recipe postRecipe(Recipe recipe, byte[] image) throws HttpClientErrorException {
