@@ -106,8 +106,11 @@
 						<td>
 							<a th:href="@{/recipes/{id}/delete(id=${recipe.getId()})}">Удалить</a>
 						</td>
-						<td>
-							<a th:href="@{/recipes/{id}/image-delete(id=${recipe.getId()})}">Очистить изобр.</a>
+						<td th:switch="${recipe.getImageUrl()}">
+							<a th:case="null" style="pointer-events: none; opacity: 0.6;" onclick="return false"
+									th:href="@{/recipes/{id}/image-delete(id=${recipe.getId()})}">Очистить изобр.</a>
+							<a th:case="*" 
+									th:href="@{/recipes/{id}/image-delete(id=${recipe.getId()})}">Очистить изобр.</a>
 						</td>
 					</tr>
 				</table>
