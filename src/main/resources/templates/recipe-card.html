@@ -57,7 +57,7 @@
 			<!-- Поддержка изображений -->
 			<form th:switch="${recipe.getImageUrl() == null}" 
 					th:method="get" 
-					th:action="@{/recipes/{id}/download(id=*{id})}">
+					th:action="@{/recipes/{id}/image-download(id=*{id})}">
 				<button th:case="true" disabled>Скачать изображение</button>
 				<button th:case="false">Скачать изображение</button>
 			</form>

@@ -34,7 +34,7 @@ public class ImageProxyController {
 		return recipeService.getRecipeImage(recipe.getImageUrl());
 	}
 	
-	@GetMapping("/recipes/{id}/download")
+	@GetMapping("/recipes/{id}/image-download")
 	public void downloadRecipeImage(
 			@PathVariable Long id, 
 			@ModelAttribute Recipe recipe, 

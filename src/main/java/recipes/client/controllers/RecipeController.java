@@ -345,7 +345,22 @@ public class RecipeController {
 			recipeService.deleteRecipe(id);
 		} catch (HttpClientErrorException ex) {
 			int statusCode = ex.getStatusCode().value();
-			String body = ex.getResponseBodyAsString();			
+			String body = ex.getResponseBodyAsString();
+			return "redirect:/error?statusCode=" + statusCode + "&body=" + body;
+		}
+		return "redirect:/recipes";
+	}
+	
+	/* Поддержка изображений */
+	@GetMapping("/{id}/image-delete")
+	public String deleteRecipeImage(@PathVariable Long id) {
+		Recipe recipe = null;
+		try {
+			recipe = recipeService.getRecipeById(id);
+			recipeService.deleteRecipeImage(recipe.getImageUrl());
+		} catch (HttpClientErrorException ex) {
+			int statusCode = ex.getStatusCode().value();
+			String body = ex.getResponseBodyAsString();
 			return "redirect:/error?statusCode=" + statusCode + "&body=" + body;
 		}
 		return "redirect:/recipes";

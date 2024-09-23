@@ -250,7 +250,21 @@ public class RecipeRestService {
 		HttpEntity<Object> requestEntity = new HttpEntity<>(httpHeaders);
 		
 		this.restTemplate.exchange(this.urlById, HttpMethod.DELETE, 
-										requestEntity, Void.class, id);
+				requestEntity, Void.class, id);
+	}
+	
+	/* Поддержка изображений */
+	public void deleteRecipeImage(String imageUrl) throws HttpClientErrorException {
+		if(imageUrl != null) {
+			HttpHeaders httpHeaders = new HttpHeaders();
+			
+			httpHeaders.add("Authorization", sessionService.getAuthHeader());
+			
+			HttpEntity<Object> requestEntity = new HttpEntity<>(httpHeaders);
+			
+			this.restTemplate.exchange(imageUrl, HttpMethod.DELETE, 
+					requestEntity, Void.class);
+		}
 	}
 	
 }

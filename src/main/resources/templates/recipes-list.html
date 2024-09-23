@@ -80,7 +80,7 @@
 						<th>Id</th>
 						<th>Название</th>
 						<th>Описание</th>
-						<th colspan="4">Операции со списком</th>
+						<th colspan="5">Операции со списком</th>
 					</tr>
 					<tr th:each="recipe : ${recipes}">
 						<td th:text="${recipe.getId()}">
@@ -105,6 +105,9 @@
 						</td>
 						<td>
 							<a th:href="@{/recipes/{id}/delete(id=${recipe.getId()})}">Удалить</a>
+						</td>
+						<td>
+							<a th:href="@{/recipes/{id}/image-delete(id=${recipe.getId()})}">Очистить изобр.</a>
 						</td>
 					</tr>
 				</table>
